@@ -53,10 +53,10 @@ public class Matriks {
         return M1;
     }
 
-    public float Determinan() {
-        float d = 0;
+    public double Determinan() {
+        double d = 0;
         if ((this.NBrsEff == 1) && (this.NKolEFF == 1)) {
-            return Mat[0][0];
+            return (double) Mat[0][0];
         } else {
             int j, i1, j1, j2;
             int s = 1;
@@ -78,5 +78,39 @@ public class Matriks {
             }
             return d;
         }
+    }
+
+    public Matriks Inverse() {
+        Matriks Inv = new Matriks(this.NBrsEff, this.NKolEFF);
+        if ((this.NBrsEff == 1) && (this.NKolEFF == 1)) {
+            Inv.Mat[0][0] = 1/this.Determinan();
+        } else {
+            int i, j, i1, j1, i2, j2;
+            int s = 1;
+            Matriks Cofact = new Matriks(this.NBrsEff-1, this.NKolEFF-1);
+            for (i = 0; i < this.NBrsEff; i++) {
+                for (j = 0; j < this.NKolEFF; j++) {
+                    i2 = 0;
+                    for (i1 = 0; i1 < this.NBrsEff; i1++) {
+                        if (i1 != i) {
+                            j2 = 0;
+                            for (j1 = 0; j1 < this.NKolEFF; j1++) {
+                                if (j1 != j) {
+                                    Cofact.Mat[i2][j2] = Mat[i1][j1];
+                                    j2++;
+                                }
+                            }
+                            i2++;
+                        }
+                    }
+                    if ((i+j)%2 == 1) {
+                        s *= -1;
+                    }
+                    Inv.Mat[j][i] = s*Cofact.Determinan();
+                    s = 1;
+                }
+            }
+        }
+    return Inv;
     }
 }
