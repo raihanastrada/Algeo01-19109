@@ -5,7 +5,7 @@ import java.util.*;
 public class Matriks {
     // Atribut
     private int NBrsEff, NKolEFF;
-    int[][] Mat = new int[100][100];
+    double[][] Mat = new double[100][100];
     
     public Matriks(int NB, int NK){
         MakeMatriks(NB,NK);
@@ -58,7 +58,6 @@ public class Matriks {
         if ((this.NBrsEff == 1) && (this.NKolEFF == 1)) {
             return Mat[0][0];
         } else {
-            int j, i1, j1, j2;
             int s = 1;
             Matriks Cofact;
             for (j = 0; j < this.NKolEFF; j++) {
