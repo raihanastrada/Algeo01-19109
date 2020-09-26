@@ -58,6 +58,7 @@ public class Matriks {
         if ((this.NBrsEff == 1) && (this.NKolEFF == 1)) {
             return Mat[0][0];
         } else {
+            int j, i1, j1, j2;
             int s = 1;
             Matriks Cofact;
             for (j = 0; j < this.NKolEFF; j++) {
