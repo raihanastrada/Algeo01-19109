@@ -1,6 +1,7 @@
-import java.util.*;
+package src;
 
-import src.Matriks;
+
+import java.util.Scanner;
 
 public class Driver {
     static void MenuAwal() {
@@ -36,9 +37,9 @@ public class Driver {
             }
             if (Pilihan == 1 || Pilihan == 2 || Pilihan == 3) {
                 SubMenu();
-                System.out.println("Masukkan jumlah baris: ");
+                System.out.print("Masukkan jumlah baris: ");
                 int NB = input.nextInt();
-                System.out.println("Masukkan jumlah kolom: ");
+                System.out.print("Masukkan jumlah kolom: ");
                 int NK = input.nextInt();
                 Matriks M1 = new Matriks(NB, NK);
                 M1.MakeMatriks(NB, NK);
