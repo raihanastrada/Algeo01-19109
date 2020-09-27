@@ -47,16 +47,7 @@ public class Driver {
                 M1.TulisMatriks();
             }
             else if (Pilihan == 4) {
-                System.out.print("Masukkan jumlah baris: ");
-                int NB = input.nextInt();
-                System.out.print("Masukkan jumlah kolom: ");
-                int NK = input.nextInt();
-                Matriks M1 = new Matriks(NB, NK);
-                M1.MakeMatriks(NB, NK);
-                M1.InputMatriks();
-
-                M1.Gauss1();
-                System.out.println(" ");
+                System.out.println("Interpolasi Polinom");
             }
             else if (Pilihan == 5) {
                 System.out.println("Regresi linier berganda");
