@@ -156,4 +156,37 @@ public class Matriks {
         }
         return MAugmented;
     }
+
+    public Matriks Gauss1(){
+        Matriks MAugmented = new Matriks(this.NBrsEff , this.NKolEFF );
+        int N = this.NBrsEff;
+        for (int scan = 0; scan < N; scan++) {
+            /* Finding pivot row */
+            int maxrow = scan;
+            for (int i = scan+1; i < N; i++) {
+                if (Mat[i][scan] > Mat[maxrow][scan]) {
+                    maxrow = i;
+                }
+            }
+            /* Swap row with maximum element */
+            double[] temp = Mat[scan];
+            Mat[scan] = Mat[maxrow];
+            Mat[maxrow] = temp;
+
+            /* Simplifying row using factor */
+            for (int i = scan+1; i < N; i++){
+                double factor = Mat[i][scan] / Mat[scan][scan];
+                for (int j = scan; j < this.NKolEFF; j++){
+                    Mat[i][j] -= factor * Mat[scan][j];
+                }
+            }
+        }
+        for (int i = 0; i < MAugmented.NBrsEff ; i++) {
+            for (int j = 0; j < MAugmented.NKolEFF ; j++) {
+                MAugmented.Mat[i][j] = Mat[i][j];
+            }
+        }
+        return MAugmented;
+
+    }
 }
