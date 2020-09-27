@@ -1,11 +1,10 @@
 package src;
+import java.util.*;
 
-
-import java.util.Scanner;
 
 public class Driver {
     static void MenuAwal() {
-        System.out.println("|========== PROGRAM MATRIKS ==========#");
+        System.out.println("#========== PROGRAM MATRIKS ==========#");
         System.out.println("# MENU                                #");
         System.out.println("# 1. Sistem Persamaan Linear          #");
         System.out.println("# 2. Determinan                       #");
@@ -16,7 +15,7 @@ public class Driver {
     }
 
     static void SubMenu() {
-        System.out.println("|========== PROGRAM MATRIKS ==========#");
+        System.out.println("#========== PROGRAM MATRIKS ==========#");
         System.out.println("# Pilihan Metode                      #");
         System.out.println("# 1. Metode eliminasi Gauss           #");
         System.out.println("# 2. Metode eliminasi Gauss-Jordan    #");
@@ -30,29 +29,38 @@ public class Driver {
         while (!exit) {
             MenuAwal();
             System.out.print("Masukkan pilihan: ");
-            int Pilihan = input.nextInt();
-            while (Pilihan > 6 || Pilihan < 1) {
+            int PilihanMenu = input.nextInt();
+            while (PilihanMenu > 6 || PilihanMenu < 1) {
                 System.out.println("Input yang anda masukkan tidak valid");
-                Pilihan = input.nextInt();
+                PilihanMenu = input.nextInt();
             }
-            if (Pilihan == 1 || Pilihan == 2 || Pilihan == 3) {
+            if (PilihanMenu == 1 || PilihanMenu == 2 || PilihanMenu == 3) {
                 SubMenu();
-                System.out.print("Masukkan jumlah baris: ");
-                int NB = input.nextInt();
-                System.out.print("Masukkan jumlah kolom: ");
-                int NK = input.nextInt();
-                Matriks M1 = new Matriks(NB, NK);
-                M1.MakeMatriks(NB, NK);
-                M1.InputMatriks();
-                M1.TulisMatriks();
+                int PilihanSub = input.nextInt();
+                while (PilihanSub > 4 || PilihanMenu < 1) {
+                    System.out.println("Input yang anda masukkan tidak valid");
+                    PilihanSub = input.nextInt();
+                }
+                if (PilihanSub == 1) {
+                    // M1.Gauss(M2);
+                }
+                else if (PilihanSub == 2) {
+                    System.out.println("Gauss-Jordan");
+                }
+                else if (PilihanSub == 3) {
+                    // M1.Inverse();
+                }
+                else if (PilihanSub == 4) {
+                    // M1.Crammer(M2);
+                }                
             }
-            else if (Pilihan == 4) {
+            else if (PilihanMenu == 4) {
                 System.out.println("Interpolasi Polinom");
             }
-            else if (Pilihan == 5) {
+            else if (PilihanMenu == 5) {
                 System.out.println("Regresi linier berganda");
             }
-            else if (Pilihan == 6) {
+            else if (PilihanMenu == 6) {
                 System.out.println("Apakah anda akan keluar dari Program Matriks? (Y/N)");
                 int Konfirmasi = input.nextInt();
                 while (Konfirmasi != 0 || Konfirmasi != 0 || Konfirmasi != -1 || Konfirmasi != -1) {

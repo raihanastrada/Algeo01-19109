@@ -53,6 +53,7 @@ public class Matriks {
     }
 
     public double Determinan() {
+        /* Metode Eekspansi Cofactor */
         double d = 0;
         if ((this.NBrsEff == 1) && (this.NKolEFF == 1)) {
             return (double) Mat[0][0];
@@ -77,6 +78,54 @@ public class Matriks {
             }
             return d;
         }
+    }
+
+    public double Determinan2() {
+        /* Metode Reduksi Baris */
+        if ((this.NBrsEff == 1) && (this.NKolEFF == 1)) {
+            return (double) Mat[0][0];
+        }
+        else {
+            double det = 1; // Assign variabel awal determinan
+            double temp = 0; // Untuk menyimpan variabel pada swap
+            int swap = 0; // Jumlah terjadinya swap
+            int i = 0;
+            while (i < this.NBrsEff-1) {
+                if (Mat[i][i] == 0) {
+                    /* Swap jika elemen baris awal & kolom awal = 0 */
+                    int tempIdx = i+1;
+                    for (int j=0;j<this.NKolEFF;j++) {
+                        temp = Mat[i][j]; 
+                        Mat[i][j] = Mat[tempIdx][j];
+                        Mat[tempIdx][j] = temp;
+                    }
+                    swap = swap + 1;
+                }
+                // Baris i dijadikan 1
+                det *= Mat[i][i];
+                for (int j=this.NKolEFF-1;j>=0;j--) { 
+                    Mat[i][j] /= Mat[i][i];
+                }
+                // Membuat matriks bawah menjadi 0
+                for (int tempIdx1 = i+1;tempIdx1<this.NBrsEff;tempIdx1++) { 
+                    for (int j=this.NKolEFF-1;j>=0;j--) {
+                        Mat[tempIdx1][j] -= Mat[tempIdx1][i]*Mat[i][j];
+                    }
+                }
+                i += 1;
+            }
+            for (i=0;i<this.NBrsEff;i++){
+                det *= Mat[i][i];
+            }
+            if (swap%2 == 0) {
+                det *= 1;  
+            }
+            else {
+                det *= (-1);
+            }
+            return det;
+        }
+        
     }
 
     public Matriks Inverse() {
@@ -111,6 +160,36 @@ public class Matriks {
             }
         }
     return Inv;
+    }
+    public void Crammer(Matriks MHsl) {
+        // Copy Matriks
+        Matriks tempMat = new Matriks(this.NBrsEff, this.NKolEFF);
+        for (int j=0;j<this.NKolEFF;j++) {
+            for (int i=0;i<this.NBrsEff;i++) {
+                tempMat.Mat[i][j] = Mat[i][j];
+            }
+        }
+
+        double D = tempMat.Determinan2();
+        double[] arrHsl = new double[this.NKolEFF];
+        for (int j=0;j<this.NKolEFF;j++) {
+            for (int i=0;i<this.NBrsEff;i++) {
+                tempMat.Mat[i][j] = Mat[i][j];
+                Mat[i][j] = MHsl.Mat[i][0];
+            }
+            TulisMatriks();
+            arrHsl[j] = (this.Determinan())/D; // Menghitung D/D[n]
+            for (int k=0;k<this.NBrsEff;k++){
+                Mat[k][j] = tempMat.Mat[k][j]; // Mengembalikan kolom
+            }
+        }
+        for (int i=0;i<this.NKolEFF;i++){
+            System.out.print("solusi dari X"+(i+1)+" adalah = ");
+            System.out.print(arrHsl[i]);
+            if (i != this.NKolEFF-1){
+                System.out.print(", ");
+            }
+        }
     }
     public Matriks Gauss(Matriks Mkonstan) {
         Matriks MAugmented = new Matriks(this.NBrsEff , this.NKolEFF + 1);
