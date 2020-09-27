@@ -53,7 +53,7 @@ public class Matriks {
     }
 
     public double Determinan() {
-        /* Metode Eekspansi Cofactor */
+        /* Metode Ekspansi Cofactor */
         double d = 0;
         if ((this.NBrsEff == 1) && (this.NKolEFF == 1)) {
             return (double) Mat[0][0];
