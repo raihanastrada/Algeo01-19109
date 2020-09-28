@@ -23,7 +23,7 @@ public class Matriks {
         for (int i = 0; i < this.NBrsEff; i++) {
             for (int j = 0; j < this.NKolEFF; j++) {
                 System.out.print("Masukkan input matriks [" + i + "][" + j + "]: ");
-                Mat[i][j] = input.nextInt();
+                Mat[i][j] = input.nextDouble();
             }
         }
     }
@@ -86,36 +86,42 @@ public class Matriks {
         if ((this.NBrsEff == 1) && (this.NKolEFF == 1)) {
             return (double) Mat[0][0];
         } else {
+            Matriks tempMat = new Matriks(this.NBrsEff, this.NKolEFF);
+            for (int j = 0; j < this.NKolEFF; j++) {
+                for (int i = 0; i < this.NBrsEff; i++) {
+                    tempMat.Mat[i][j] = Mat[i][j];
+                }
+            }
             double det = 1; // Assign variabel awal determinan
             double temp = 0; // Untuk menyimpan variabel pada swap
             int swap = 0; // Jumlah terjadinya swap
             int i = 0;
             while (i < this.NBrsEff - 1) {
-                if (Mat[i][i] == 0) {
+                if (tempMat.Mat[i][i] == 0) {
                     /* Swap jika elemen baris awal & kolom awal = 0 */
                     int tempIdx = i + 1;
                     for (int j = 0; j < this.NKolEFF; j++) {
-                        temp = Mat[i][j];
-                        Mat[i][j] = Mat[tempIdx][j];
-                        Mat[tempIdx][j] = temp;
+                        temp = tempMat.Mat[i][j];
+                        tempMat.Mat[i][j] = tempMat.Mat[tempIdx][j];
+                        tempMat.Mat[tempIdx][j] = temp;
                     }
                     swap = swap + 1;
                 }
                 // Baris i dijadikan 1
-                det *= Mat[i][i];
+                det *= tempMat.Mat[i][i];
                 for (int j = this.NKolEFF - 1; j >= 0; j--) {
-                    Mat[i][j] /= Mat[i][i];
+                    tempMat.Mat[i][j] /= tempMat.Mat[i][i];
                 }
                 // Membuat matriks bawah menjadi 0
                 for (int tempIdx1 = i + 1; tempIdx1 < this.NBrsEff; tempIdx1++) {
                     for (int j = this.NKolEFF - 1; j >= 0; j--) {
-                        Mat[tempIdx1][j] -= Mat[tempIdx1][i] * Mat[i][j];
+                        tempMat.Mat[tempIdx1][j] -= tempMat.Mat[tempIdx1][i] * tempMat.Mat[i][j];
                     }
                 }
                 i += 1;
             }
             for (i = 0; i < this.NBrsEff; i++) {
-                det *= Mat[i][i];
+                det *= tempMat.Mat[i][i];
             }
             if (swap % 2 == 0) {
                 det *= 1;
@@ -162,16 +168,9 @@ public class Matriks {
     }
 
     public void Crammer(Matriks MHsl) {
-        // Copy Matriks
-        Matriks tempMat = new Matriks(this.NBrsEff, this.NKolEFF);
-        for (int j = 0; j < this.NKolEFF; j++) {
-            for (int i = 0; i < this.NBrsEff; i++) {
-                tempMat.Mat[i][j] = Mat[i][j];
-            }
-        }
-
-        double D = tempMat.Determinan2();
+        double D = this.Determinan2();
         double[] arrHsl = new double[this.NKolEFF];
+        Matriks tempMat = new Matriks(this.NBrsEff,this.NKolEFF);
         for (int j = 0; j < this.NKolEFF; j++) {
             for (int i = 0; i < this.NBrsEff; i++) {
                 tempMat.Mat[i][j] = Mat[i][j];
@@ -190,6 +189,7 @@ public class Matriks {
                 System.out.print(", ");
             }
         }
+        System.out.println("");
     }
 
     public Matriks Gauss(Matriks Mkonstan) {
