@@ -42,10 +42,28 @@ public class Driver {
                     PilihanSub = input.nextInt();
                 }
                 if (PilihanSub == 1) {
-                    // M1.Gauss(M2);
+                    int NB,NK;
+                    System.out.print("Masukkan jumlah baris : ");
+                    NB = input.nextInt();
+                    System.out.print("Masukkan jumlah kolom : ");
+                    NK = input.nextInt();
+                    Matriks M1 = new Matriks(NB,NK);
+                    M1.InputMatriks();
+                    M1.TulisMatriks();
+                    System.out.println(" ");
+                    M1.Gauss1();
                 }
                 else if (PilihanSub == 2) {
-                    System.out.println("Gauss-Jordan");
+                    int NB,NK;
+                    System.out.print("Masukkan jumlah baris : ");
+                    NB = input.nextInt();
+                    System.out.print("Masukkan jumlah kolom : ");
+                    NK = input.nextInt();
+                    Matriks M1 = new Matriks(NB,NK);
+                    M1.InputMatriks();
+                    M1.TulisMatriks();
+                    System.out.println(" ");
+                    M1.GaussJordan();
                 }
                 else if (PilihanSub == 3) {
                     // M1.Inverse();
