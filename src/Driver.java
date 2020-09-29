@@ -54,29 +54,35 @@ public class Driver {
                     System.out.println("Input yang anda masukkan tidak valid");
                     PilihanSub = input.nextInt();
                 }
-                if (PilihanSub == 1) {
+                if (PilihanSub == 1) { //Metode Gauss
                     int NB,NK;
-                    System.out.print("Masukkan jumlah baris : ");
-                    NB = input.nextInt();
-                    System.out.print("Masukkan jumlah kolom : ");
-                    NK = input.nextInt();
-                    Matriks M1 = new Matriks(NB,NK);
-                    M1.InputMatriks();
-                    M1.TulisMatriks();
-                    System.out.println(" ");
-                    M1.Gauss1();
+                    System.out.print("Masukkan jumlah baris : "); NB = input.nextInt();
+                    System.out.print("Masukkan jumlah kolom : "); NK = input.nextInt();
+                    Matriks M1 = new Matriks(NB,NK); M1.InputMatriks();
+                    Matriks Mhasil = M1.Gauss1();
+                    double Dethasil= Mhasil.Determinan();
+
+                    if (Dethasil != 0.0) {
+                        Mhasil.TulisMatriks();
+                    }
+                    else {
+                        Mhasil.TulisMatriks();
+                    }
                 }
-                else if (PilihanSub == 2) {
+                else if (PilihanSub == 2) { //Metode Gauss
                     int NB,NK;
-                    System.out.print("Masukkan jumlah baris : ");
-                    NB = input.nextInt();
-                    System.out.print("Masukkan jumlah kolom : ");
-                    NK = input.nextInt();
-                    Matriks M1 = new Matriks(NB,NK);
-                    M1.InputMatriks();
-                    M1.TulisMatriks();
-                    System.out.println(" ");
-                    M1.GaussJordan();
+                    System.out.print("Masukkan jumlah baris : "); NB = input.nextInt();
+                    System.out.print("Masukkan jumlah kolom : "); NK = input.nextInt();
+                    Matriks M1 = new Matriks(NB,NK); M1.InputMatriks();
+                    Matriks Mhasil = M1.GaussJordan();
+                    double Dethasil= Mhasil.Determinan();
+
+                    if (Dethasil != 0.0) {
+                        Mhasil.TulisMatriks();
+                    }
+                    else {
+                        Mhasil.TulisMatriks();
+                    }
                 }
                 else if (PilihanSub == 3) {
                     // M1.Inverse();

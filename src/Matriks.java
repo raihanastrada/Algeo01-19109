@@ -237,7 +237,7 @@ public class Matriks {
         return MAugmented;
     }
 
-    public void Gauss1() {
+    public Matriks Gauss1() {
         Matriks MAugmented = new Matriks(this.NBrsEff, this.NKolEFF);
         int N = this.NBrsEff;
         for (int scan = 0; scan < N; scan++) {
@@ -261,17 +261,43 @@ public class Matriks {
                 }
             }
         }
+        /* Scanning the diagonal elements and make it to 1 (divide the i-th row by [scan][scan]-th elements) */
+        for (int i = 0; i < this.NBrsEff ; i++) {
+            for (int j = 0; j < this.NKolEFF; j++) {
+                double divisor;
+                if (i == j) {
+                    divisor = Mat[i][j];
+                    for (int k = j; (k < this.NKolEFF); k++){
+                        if (divisor != 0) {
+                            Mat[i][k] /= divisor;
+                        }
+                    }
+                }
+            }
+        }
+        /* Swapping row with all 0's as the elements */
+        int i,j,k; boolean zero;
+        k = 1;
+        for (i = 0; i < this.NBrsEff; i++){
+            for (j = 0; j < this.NKolEFF; j++){
+                if(Mat[i][j] != 0) break;
+                if(j == this.NKolEFF - 1) {
+                    double [] temp = Mat[i];
+                    Mat[i] = Mat[this.NBrsEff - k];
+                    Mat[this.NBrsEff - k] = temp;
+                }
+            }
+        }
         /* Assigning value to MAugmented */
-        for (int i = 0; i < MAugmented.NBrsEff; i++) {
-            for (int j = 0; j < MAugmented.NKolEFF; j++) {
+        for ( i = 0; i < MAugmented.NBrsEff; i++) {
+            for ( j = 0; j < MAugmented.NKolEFF; j++) {
                 MAugmented.Mat[i][j] = Mat[i][j];
             }
         }
-        MAugmented.TulisMatriks();
-
+        return MAugmented;
     }
 
-    public void GaussJordan() {
+    public Matriks GaussJordan() {
         Matriks MAugmented = new Matriks(this.NBrsEff, this.NKolEFF);
         int N = this.NBrsEff;
         for (int scan = 0; scan < N; scan++) {
@@ -282,24 +308,27 @@ public class Matriks {
                     minrow = i;
                 }
             }
-            /* Swap row with minimum element */
 
+            /* Swap row with minimum element */
             double[] temp = Mat[scan];
             Mat[scan] = Mat[minrow];
             Mat[minrow] = temp;
 
-
             /* Simplifying row using factor */
             for (int i = 0 ; i < N; i++) {
-                double factor = Mat[i][scan] / Mat[scan][scan];
+                double factor;
+                if (Mat[scan][scan] != 0) {
+                    factor = Mat[i][scan] / Mat[scan][scan];
+                }
+                else {
+                    factor = 0;
+                }
                 if ( i != scan) {
                     for (int j = scan; j < this.NKolEFF; j++) {
                         Mat[i][j] -= factor * Mat[scan][j];
                     }
                 }
-
             }
-
         }
         /* Scanning the diagonal elements and make it to 1 (divide the i-th row by [scan][scan]-th elements) */
         for (int i = 0; i < this.NBrsEff ; i++) {
@@ -307,18 +336,33 @@ public class Matriks {
                 double divisor;
                 if (i == j) {
                     divisor = Mat[i][j];
-                    for (int k = j; k < this.NKolEFF ; k++){
-                        Mat[i][k] /= divisor;
+                    for (int k = j; (k < this.NKolEFF); k++){
+                        if (divisor != 0) {
+                            Mat[i][k] /= divisor;
+                        }
                     }
                 }
             }
         }
+        /* Swapping row with all 0's element */
+        int i,j,k; boolean zero;
+        k = 1;
+        for (i = 0; i < this.NBrsEff; i++){
+            for (j = 0; j < this.NKolEFF; j++){
+                if(Mat[i][j] != 0) break;
+                if(j == this.NKolEFF - 1) {
+                    double [] temp = Mat[i];
+                    Mat[i] = Mat[this.NBrsEff - k];
+                    Mat[this.NBrsEff - k] = temp;
+                }
+            }
+        }
 
-        for (int i = 0; i < MAugmented.NBrsEff ; i++) {
-            for (int j = 0; j < MAugmented.NKolEFF; j++) {
+        for (i = 0; i < MAugmented.NBrsEff ; i++) {
+            for (j = 0; j < MAugmented.NKolEFF; j++) {
                 MAugmented.Mat[i][j] = Mat[i][j];
             }
         }
-        MAugmented.TulisMatriks();
+        return MAugmented;
     }
 }
