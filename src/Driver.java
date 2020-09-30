@@ -1,5 +1,7 @@
-package src;
+//package src;
 import java.util.*;
+
+import src.Matriks;
 
 public class Driver {
     static void MenuAwal() {
@@ -156,9 +158,10 @@ public class Driver {
                         System.out.println(M1.Determinan());
                     }
                     else {
-                        // M1 = Scan Matriks dari File.txt
+                        Matriks M1 = new Matriks(0,0);
+                        M1.InputMatriksFile();
                         System.out.print("Determinan dari permasalahan tersebut adalah : ");
-                        // System.out.println(M1.Determinan());
+                        System.out.println(M1.Determinan());
                     }
                 }
                 else {
@@ -172,9 +175,10 @@ public class Driver {
                         System.out.println(M1.Determinan2());
                     }
                     else {
-                        // M1 = Scan Matriks dari File.txt
+                        Matriks M1 = new Matriks(0,0);
+                        M1.InputMatriksFile();
                         System.out.print("Determinan dari permasalahan tersebut adalah : ");
-                        // System.out.println(M1.Determinan2());
+                        System.out.println(M1.Determinan2());
                     }
                 }
             }
@@ -186,14 +190,13 @@ public class Driver {
                     M1.InputMatriks();
                     System.out.println("Invers dari matriks tersebut adalah : ");
                     System.out.println(M1.Determinan());
-                    M1.Inverse();
-                    M1.TulisMatriks();
+                    M1.Inverse().TulisMatriks();
                 }
                 else {
-                    // M1 = Scan Matriks dari File.txt
+                    Matriks M1 = new Matriks(0,0);
+                    M1.InputMatriksFile();
                     System.out.println("Invers dari matriks tersebut adalah : ");
-                    // M1.Inverse();
-                    // M1.TulisMatriks();
+                    M1.Inverse().TulisMatriks();
                 }
             }
             else if (PilihanMenu == 4) {
