@@ -54,10 +54,16 @@ public class Driver {
                     PilihanSub = input.nextInt();
                 }
                 if (PilihanSub == 1) { //Metode Gauss
-                    int NB,NK;
-                    System.out.print("Masukkan jumlah baris : "); NB = input.nextInt();
-                    System.out.print("Masukkan jumlah kolom : "); NK = input.nextInt();
-                    Matriks M1 = new Matriks(NB,NK); M1.InputMatriks();
+                    Matriks M1;
+                    if (PilihanMet == 1) {
+                        int NB,NK;
+                        System.out.print("Masukkan jumlah baris : "); NB = input.nextInt();
+                        System.out.print("Masukkan jumlah kolom : "); NK = input.nextInt();
+                        M1 = new Matriks(NB,NK); M1.InputMatriks();
+                    } else {
+                        M1 = new Matriks(0,0);
+                        M1.InputMatriksFile();
+                    }
                     Matriks Mhasil = M1.Gauss1();
                     double Dethasil= Mhasil.Determinan();
 
@@ -69,11 +75,17 @@ public class Driver {
                     }
                 }
                 else if (PilihanSub == 2) { //Metode Gauss
-                    int NB,NK;
-                    System.out.print("Masukkan jumlah baris : "); NB = input.nextInt();
-                    System.out.print("Masukkan jumlah kolom : "); NK = input.nextInt();
-                    Matriks M1 = new Matriks(NB,NK); M1.InputMatriks();
-                    Matriks Mhasil = M1.GaussJordan();
+                    Matriks M1;
+                    if (PilihanMet == 1) {
+                        int NB,NK;
+                        System.out.print("Masukkan jumlah baris : "); NB = input.nextInt();
+                        System.out.print("Masukkan jumlah kolom : "); NK = input.nextInt();
+                        M1 = new Matriks(NB,NK); M1.InputMatriks();
+                    } else {
+                        M1 = new Matriks(0,0);
+                        M1.InputMatriksFile();   
+                    }
+                    Matriks Mhasil = M1.Gauss1();
                     double Dethasil= Mhasil.Determinan();
 
                     if (Dethasil != 0.0) {
@@ -84,16 +96,24 @@ public class Driver {
                     }
                 }
                 else if (PilihanSub == 3) {
-                    System.out.println("Masukkan jumlah persamaan: ");
-                    int NB = input.nextInt();
-                    System.out.println("Masukkan jumlah variabel: ");
-                    int NK = input.nextInt();
-                    Matriks M1 = new Matriks(NB, NK);
-                    System.out.println("Masukkan matriks variabel: ");
-                    M1.InputMatriks();
-                    Matriks b = new Matriks(NB,1);
-                    System.out.println("Masukkan nilai hasil masing persamaan: ");
-                    b.InputMatriks();
+                    Matriks M1;
+                    Matriks b;
+                    if (PilihanMet == 1) {
+                        System.out.println("Masukkan jumlah persamaan: ");
+                        int NB = input.nextInt();
+                        System.out.println("Masukkan jumlah variabel: ");
+                        int NK = input.nextInt();
+                        M1 = new Matriks(NB, NK);
+                        System.out.println("Masukkan matriks variabel: ");
+                        M1.InputMatriks();
+                        b = new Matriks(NB,1);
+                        System.out.println("Masukkan nilai hasil masing persamaan: ");
+                        b.InputMatriks();
+                    } else {
+                        M1 = new Matriks(0,0);
+                        M1.InputMatriksFile();
+                        b = M1.Deaugment();
+                    }
                     M1.SPLInverse(b);
                 }
                 else if (PilihanSub == 4) {

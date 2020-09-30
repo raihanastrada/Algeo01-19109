@@ -29,7 +29,9 @@ public class Matriks {
         }
     }
 
-    public void InputMatriksFile(String filename) {
+    public void InputMatriksFile() {
+        Scanner input = new Scanner(System.in);
+        String filename = input.nextLine();
         try {
             Scanner s = new Scanner (new File(filename));
             int NB = 0;
