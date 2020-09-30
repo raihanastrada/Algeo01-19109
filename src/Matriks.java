@@ -140,6 +140,7 @@ public class Matriks {
         } else {
             int i, j, i1, j1, i2, j2;
             int s = 1;
+            double det = this.Determinan();
             Matriks Cofact = new Matriks(this.NBrsEff - 1, this.NKolEFF - 1);
             for (i = 0; i < this.NBrsEff; i++) {
                 for (j = 0; j < this.NKolEFF; j++) {
@@ -159,7 +160,7 @@ public class Matriks {
                     if ((i + j) % 2 == 1) {
                         s *= -1;
                     }
-                    Inv.Mat[j][i] = s * Cofact.Determinan();
+                    Inv.Mat[j][i] = s*Cofact.Determinan()/det;
                     s = 1;
                 }
             }
@@ -364,5 +365,126 @@ public class Matriks {
             }
         }
         return MAugmented;
+    }
+
+    public void TulisSPLUnik() {
+        for (int i = 0; i < this.NBrsEff; i++) {
+            System.out.print("Solusi dari X" + (i + 1) + " adalah = ");
+            System.out.println(Mat[i][0]);
+        }
+    }
+
+    public Matriks TukerKolom(Matriks b) {
+        Matriks M1 = this.Copy();
+        for (int i = 0; i < this.NBrsEff; i++) {
+            M1.Mat[i][0] = b.Mat[i][0];
+        }
+        return M1;
+    }
+
+    public boolean AdaBasis(int Loc) {
+        boolean ada = false;
+        boolean adaBrs;
+        for (int i = 0; i < this.NBrsEff; i++) {
+            adaBrs = true;
+            for (int j = 0; j < this.NKolEFF; j++) {
+                adaBrs = adaBrs && (((j == Loc) && (Mat[i][j] == 1)) || ((j != Loc) && (Mat[i][j] == 0)));
+            }
+            ada = ada || adaBrs;
+        }
+        return ada;
+    }
+
+    public Matriks AmbilBaris(int i) {
+        Matriks Hasil = new Matriks(1, this.NKolEFF);
+        for (int j = 0; j < this.NKolEFF; j++) {
+            Hasil.Mat[0][j] = Mat[i][j];
+        }
+        return Hasil;
+    }
+
+    public void Square(Matriks b) {
+        if (this.NBrsEff > this.NKolEFF) {
+            Matriks M1 = new Matriks(this.NBrsEff, this.NBrsEff);
+
+        }
+    }
+
+    public boolean IsEmpty() {
+        for (int i = 0; i < this.NBrsEff; i++) {
+            for (int j = 0; j < this.NKolEFF; j++) {
+                if (Mat[i][j] != 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean AdaBarisKosong() {
+        for (int i = 0; i < this.NBrsEff; i++) {
+            if (this.AmbilBaris(i).IsEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Matriks Copy(){
+        Matriks Hasil = new Matriks(this.NBrsEff, this.NKolEFF);
+        for (int i = 0; i < this.NBrsEff; i++) {
+            for (int j = 0; j < this.NKolEFF; j++) {
+                Hasil.Mat[i][j] = Mat[i][j];
+            }
+        }
+        return Hasil;
+    }
+
+    public Matriks JadiBasis() {
+        Matriks M1 = this.Copy();
+        int fill = this.NBrsEff-1;
+        while (this.AdaBasis(fill)) {
+            fill--;
+        }
+        int i = this.NBrsEff-1;
+        int fill2;
+        boolean barisBasis;
+        if (this.AdaBarisKosong()) {
+            while (i >= 0) {
+                if (this.AmbilBaris(i).IsEmpty()) {
+                    for (int j = 0; j < this.NKolEFF; j++) {
+                        if (j == fill) {
+                            M1.Mat[i][j] = 1;
+                        } else {
+                            M1.Mat[i][j] = 0;
+                        }
+                    }
+                    return M1;
+                }
+                i--;
+            }
+            return M1;
+        } else {
+            while (i >= 0) {
+                fill2 = fill;
+                barisBasis = false;
+                while ((fill2 < this.NBrsEff) && !barisBasis) {
+                    barisBasis = barisBasis || this.AmbilBaris(i).AdaBasis(fill2);
+                    fill2++;
+                }
+                if (!barisBasis) {
+                    for (int j = 0; j < this.NKolEFF; j++) {
+                        if (j == fill) {
+                            M1.Mat[i][j] = 1;
+                        } else {
+                            M1.Mat[i][j] = 0;
+                        }
+                    }
+                    return M1;
+                }
+                i--;
+            }
+            return M1;
+        }
     }
 }

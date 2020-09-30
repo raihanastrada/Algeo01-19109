@@ -85,7 +85,33 @@ public class Driver {
                     }
                 }
                 else if (PilihanSub == 3) {
-                    // M1.Inverse();
+                    System.out.println("Masukkan jumlah persamaan: ");
+                    int NB = input.nextInt();
+                    System.out.println("Masukkan jumlah variabel: ");
+                    int NK = input.nextInt();
+                    Matriks M1 = new Matriks(NB, NK);
+                    System.out.println("Masukkan matriks variabel: ");
+                    M1.InputMatriks();
+                    Matriks b = new Matriks(NB,1);
+                    System.out.println("Masukkan nilai hasil masing persamaan: ");
+                    b.InputMatriks();
+                    Matriks What = M1.TukerKolom(b);
+                    if (M1.Determinan() != 0) {
+                        Matriks Mhasil = M1.Inverse().KaliMatriks(b);
+                        Mhasil.TulisSPLUnik();
+                    } else {
+                        if (M1.TukerKolom(b).Determinan() != 0) {
+                            System.out.println("SPL tidak memiliki solusi");
+                        } else {
+                            int varBebas = 1;
+                            Matriks Basis = M1.JadiBasis();
+                            while (Basis.Determinan() == 0) {
+                                Basis = Basis.JadiBasis();
+                                varBebas++;
+                            }
+                            System.out.println("Terdapat " + varBebas + " variabel bebas.");
+                        }
+                    }
                 }
                 else if (PilihanSub == 4) {
                     int NB,NK;
