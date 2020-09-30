@@ -385,18 +385,19 @@ public class Matriks {
     }
 
     public void TulisSPLParametrik(Matriks M1, Matriks b1) {
+        double epsilon = 1e-10;
         Matriks A = this.Copy();
         Matriks bvar = b1.VarMask(M1);
         Matriks Mkonst = A.KaliMatriks(b1.UnMask(bvar));
         for (int i = 0; i < A.NBrsEff; i++) {
             System.out.print("Solusi dari X" + (i + 1) + " adalah = ");
-            if (Mkonst.Mat[i][0] != 0) {
+            if ((Mkonst.Mat[i][0] > epsilon) || (Mkonst.Mat[i][0] < -epsilon)) {
                 System.out.print(Mkonst.Mat[i][0]);
             }
             for (int j = 0; j < A.NKolEFF; j++) {
                 if (bvar.Mat[j][0] != 0) {
                     if (A.Mat[i][j] > 0) {
-                        if (Mkonst.Mat[i][0] != 0) {
+                        if ((Mkonst.Mat[i][0] > epsilon) || (Mkonst.Mat[i][0] < -epsilon)) {
                             System.out.print(" + ");
                         }
                         if (A.Mat[i][j] != 1) {
@@ -416,17 +417,18 @@ public class Matriks {
         }
     }
 
-    public Matriks TukerKolom(Matriks b) {
+    public Matriks TukerKolom(Matriks k, int j) {
         Matriks M1 = this.Copy();
-        int j = this.NKolEFF-1;
-        while (j >= 0) {
-            if ((j == 0) || (M1.AmbilKolom(j).IsEmpty())) {
-                for (int i = 0; i < this.NBrsEff; i++) {
-                    M1.Mat[i][j] = b.Mat[i][0];
-                }
-                return M1;
-            }
-            j--;
+        for (int i = 0; i < this.NBrsEff; i++) {
+            M1.Mat[i][j] = k.Mat[i][0];
+        }
+        return M1;
+    }
+
+    public Matriks TukerBaris(Matriks b, int i) {
+        Matriks M1 = this.Copy();
+        for (int j = 0; j < this.NKolEFF; j++) {
+            M1.Mat[i][j] = b.Mat[0][j];
         }
         return M1;
     }
@@ -522,50 +524,38 @@ public class Matriks {
 
     public Matriks JadiBasis() {
         Matriks M1 = this.Copy();
-        int fill = this.NBrsEff-1;
-        while (this.AdaBasis(fill)) {
-            fill--;
-        }
-        int i = this.NBrsEff-1;
-        int fill2;
-        boolean barisBasis;
-        if (this.AdaBarisKosong()) {
-            while (i >= 0) {
-                if (this.AmbilBaris(i).IsEmpty()) {
-                    for (int j = 0; j < this.NKolEFF; j++) {
-                        if (j == fill) {
-                            M1.Mat[i][j] = 1;
-                        } else {
-                            M1.Mat[i][j] = 0;
-                        }
-                    }
-                    return M1;
-                }
-                i--;
+        int fill;
+        if (M1.AdaKolomKosong()) {
+            fill = 0;
+            while ((!this.AmbilKolom(fill).IsEmpty()) && (fill < this.NKolEFF)) {
+                fill++;
             }
-            return M1;
         } else {
-            while (i >= 0) {
-                fill2 = fill;
-                barisBasis = false;
-                while ((fill2 < this.NBrsEff) && !barisBasis) {
-                    barisBasis = barisBasis || this.AmbilBaris(i).AdaBasis(fill2);
-                    fill2++;
-                }
-                if (!barisBasis) {
-                    for (int j = 0; j < this.NKolEFF; j++) {
-                        if (j == fill) {
-                            M1.Mat[i][j] = 1;
-                        } else {
-                            M1.Mat[i][j] = 0;
-                        }
-                    }
-                    return M1;
-                }
-                i--;
+            fill = this.NBrsEff-1;
+            while (this.AdaBasis(fill)) {
+                fill--;
             }
-            return M1;
         }
+        int i = NBrsEff-1;
+        Matriks Mtemp;
+        Matriks BarisIden = new Matriks(1, this.NKolEFF);
+        for (int j = 0; j < this.NKolEFF; j++) {
+            if (j == fill) {
+                BarisIden.Mat[0][j] = 1;
+            } else {
+                BarisIden.Mat[0][j] = 0;
+            }
+        }
+        while (i >= 0) {
+            Mtemp = M1.TukerBaris(BarisIden, i);
+            if (M1.AmbilBaris(i).IsEmpty()) {
+                return Mtemp;
+            } else if ((Mtemp.Determinan() != 0) || (i == 0)) {
+                return Mtemp;
+            }
+            i--;
+        }
+        return M1;
     }
 
     public Matriks ExtSolusi(int NBrs, double fill) {
@@ -580,7 +570,7 @@ public class Matriks {
         return b1;
     }
 
-    public Matriks VarMask(Matriks M) {
+    public Matriks VarMask(Matriks M) { // mengubah konstanta dalam b menjadi 0 dan variabel menjadi k
         Matriks b = this.Copy();
         int k = 1;
         for (int i = 0; i < this.NBrsEff; i++) {
@@ -606,9 +596,15 @@ public class Matriks {
 
     public Matriks ConjMatriks(Matriks M) {
         Matriks M1 = this.Copy();
+        boolean beda;
         for (int i = 0; i < this.NBrsEff; i++) {
+            beda = false;
             for (int j = 0; j < this.NKolEFF; j++) {
-                if (Mat[i][j] != M.Mat[i][j]) {
+                if (M1.Mat[i][j] != M.Mat[i][j]) {
+                    beda = true;
+                }
+            } if (beda) {
+                for (int j = 0; j < this.NKolEFF; j++) {
                     M1.Mat[i][j] = 0;
                 }
             }
@@ -619,11 +615,9 @@ public class Matriks {
     public void SPLInverse(Matriks b) {
         Matriks M1 = this.Square();
         Matriks b1 = b.ExtSolusi(M1.NBrsEff, 0.0);
-        Matriks M2 = M1.TukerKolom(b1);
         if (M1.Determinan() != 0) {
             Matriks Mhasil = M1.Inverse().KaliMatriks(b);
             Mhasil.TulisSPLUnik();
-            System.out.println("unik");
         } else {
             boolean valid = true;
             if (M1.AdaBarisKosong()) {
@@ -633,19 +627,25 @@ public class Matriks {
                     }
                 }
             }
-            if ((M2.Determinan() != 0) || !valid) {
+            boolean nonZero = false;
+            for (int j = 0; j < this.NKolEFF; j++) {
+                if (M1.TukerKolom(b1, j).Determinan() != 0) {
+                    nonZero = true;
+                }
+            }
+            if (nonZero || !valid) {
                 System.out.println("SPL tidak memiliki solusi");
             } else {
                 int varBebas = 1;
                 Matriks Basis = M1.JadiBasis();
-                while (Basis.Determinan() == 0) {
+                while ((Basis.Determinan() == 0) && varBebas <= M1.NBrsEff) {
                     Basis = Basis.JadiBasis();
                     varBebas++;
                 }
                 Matriks A = Basis.Inverse();
                 Matriks MTrue = Basis.ConjMatriks(M1);
                 A.TulisSPLParametrik(MTrue, b1);
-                System.out.println("Terdapat " + varBebas + " variabel bebas.");
+                System.out.println("Dengan " + varBebas + " variabel bebas.");
             }
         }
     }
