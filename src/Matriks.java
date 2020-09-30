@@ -403,11 +403,25 @@ public class Matriks {
         return Hasil;
     }
 
-    public void Square(Matriks b) {
-        if (this.NBrsEff > this.NKolEFF) {
-            Matriks M1 = new Matriks(this.NBrsEff, this.NBrsEff);
-
+    public Matriks Square() {
+        if (this.NBrsEff != this.NKolEFF) {
+            int N = this.NKolEFF;
+            if (this.NBrsEff > this.NKolEFF) {
+                N = this.NBrsEff;
+            }
+            Matriks M1 = new Matriks(N, N);
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < N; j++) {
+                    if ((j < this.NKolEFF) || (i < NBrsEff)) {
+                        M1.Mat[i][j] = this.Mat[i][j];
+                    } else {
+                        M1.Mat[i][j] = 0;
+                    }
+                }
+            }
+            return M1;
         }
+        return this.Copy();
     }
 
     public boolean IsEmpty() {
@@ -485,6 +499,26 @@ public class Matriks {
                 i--;
             }
             return M1;
+        }
+    }
+
+    public void SPLInverse(Matriks b) {
+        Matriks M1 = this.Square();
+        if (M1.Determinan() != 0) {
+            Matriks Mhasil = M1.Inverse().KaliMatriks(b);
+            Mhasil.TulisSPLUnik();
+        } else {
+            if (M1.TukerKolom(b).Determinan() != 0) {
+                System.out.println("SPL tidak memiliki solusi");
+            } else {
+                int varBebas = 1;
+                Matriks Basis = M1.JadiBasis();
+                while (Basis.Determinan() == 0) {
+                    Basis = Basis.JadiBasis();
+                    varBebas++;
+                }
+                System.out.println("Terdapat " + varBebas + " variabel bebas.");
+            }
         }
     }
 }

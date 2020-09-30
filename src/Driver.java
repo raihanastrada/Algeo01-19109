@@ -1,7 +1,6 @@
 package src;
 import java.util.*;
 
-
 public class Driver {
     static void MenuAwal() {
         System.out.println("#========== PROGRAM MATRIKS ==========#");
@@ -95,23 +94,7 @@ public class Driver {
                     Matriks b = new Matriks(NB,1);
                     System.out.println("Masukkan nilai hasil masing persamaan: ");
                     b.InputMatriks();
-                    Matriks What = M1.TukerKolom(b);
-                    if (M1.Determinan() != 0) {
-                        Matriks Mhasil = M1.Inverse().KaliMatriks(b);
-                        Mhasil.TulisSPLUnik();
-                    } else {
-                        if (M1.TukerKolom(b).Determinan() != 0) {
-                            System.out.println("SPL tidak memiliki solusi");
-                        } else {
-                            int varBebas = 1;
-                            Matriks Basis = M1.JadiBasis();
-                            while (Basis.Determinan() == 0) {
-                                Basis = Basis.JadiBasis();
-                                varBebas++;
-                            }
-                            System.out.println("Terdapat " + varBebas + " variabel bebas.");
-                        }
-                    }
+                    M1.SPLInverse(b);
                 }
                 else if (PilihanSub == 4) {
                     int NB,NK;
