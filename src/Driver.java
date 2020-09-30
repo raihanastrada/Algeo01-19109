@@ -95,9 +95,8 @@ public class Driver {
                         Mhasil.TulisMatriks();
                     }
                 }
-                else if (PilihanSub == 3) {
-                    Matriks M1;
-                    Matriks b;
+                else if (PilihanSub == 3) { // metode inverse; x = A^-1 * b
+                    Matriks M1, b;
                     if (PilihanMet == 1) {
                         System.out.println("Masukkan jumlah persamaan: ");
                         int NB = input.nextInt();
@@ -117,15 +116,22 @@ public class Driver {
                     M1.SPLInverse(b);
                 }
                 else if (PilihanSub == 4) {
-                    int NB,NK;
-                    System.out.print("Masukkan jumlah baris : ");
-                    NB = input.nextInt();
-                    System.out.print("Masukkan jumlah kolom : ");
-                    NK = input.nextInt();
-                    Matriks M1 = new Matriks(NB,NK);
-                    M1.InputMatriks();
-                    Matriks M2 = new Matriks(NB,1);
-                    M2.InputMatriks();
+                    Matriks M1, M2;
+                    if (PilihanMet == 1) {
+                        int NB,NK;
+                        System.out.print("Masukkan jumlah baris : ");
+                        NB = input.nextInt();
+                        System.out.print("Masukkan jumlah kolom : ");
+                        NK = input.nextInt();
+                        M1 = new Matriks(NB,NK);
+                        M1.InputMatriks();
+                        M2 = new Matriks(NB,1);
+                        M2.InputMatriks();
+                    } else {
+                        M1 = new Matriks(0,0);
+                        M1.InputMatriksFile();
+                        M2 = M1.Deaugment();
+                    }
                     M1.Crammer(M2);
                 }                
             }
