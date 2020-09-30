@@ -492,17 +492,6 @@ public class Matriks {
         return true;
     }
 
-    public boolean IsEq(Matriks M) {
-        for (int i = 0; i < this.NBrsEff; i++) {
-            for (int j = 0; j < this.NKolEFF; j++) {
-                if (Mat[i][j] != M.Mat[i][j]) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     public boolean AdaBarisKosong() {
         for (int i = 0; i < this.NBrsEff; i++) {
             if (this.AmbilBaris(i).IsEmpty()) {
