@@ -53,6 +53,16 @@ public class Matriks {
         return M1;
     }
 
+    public Matriks MinusMatriks(Matriks M2) { // I.S. dimensi this.Mat = dimensi M2.Mat
+        Matriks M1 = this.Copy();
+        for (int i = 0; i < this.NBrsEff; i++) {
+            for (int j = 0; j < this.NKolEFF; j++) {
+                M1.Mat[i][j] -= M2.Mat[i][j];
+            }
+        }
+        return M1;
+    }
+
     public double Determinan() {
         /* Metode Ekspansi Cofactor */
         double d = 0;
@@ -374,10 +384,49 @@ public class Matriks {
         }
     }
 
+    public void TulisSPLParametrik(Matriks M1, Matriks b1) {
+        Matriks A = this.Copy();
+        Matriks bvar = b1.VarMask(M1);
+        Matriks Mkonst = A.KaliMatriks(b1.UnMask(bvar));
+        for (int i = 0; i < A.NBrsEff; i++) {
+            System.out.print("Solusi dari X" + (i + 1) + " adalah = ");
+            if (Mkonst.Mat[i][0] != 0) {
+                System.out.print(Mkonst.Mat[i][0]);
+            }
+            for (int j = 0; j < A.NKolEFF; j++) {
+                if (bvar.Mat[j][0] != 0) {
+                    if (A.Mat[i][j] > 0) {
+                        if (Mkonst.Mat[i][0] != 0) {
+                            System.out.print(" + ");
+                        }
+                        if (A.Mat[i][j] != 1) {
+                            System.out.print(A.Mat[i][j]);
+                        }
+                        System.out.print("k" + ((int) bvar.Mat[j][0]));
+                    } else if (A.Mat[i][j] < 0) {
+                        System.out.print(" - ");
+                        if (A.Mat[i][j] != -1) {
+                            System.out.print(-1*A.Mat[i][j]);
+                        }
+                        System.out.print("k" + ((int) bvar.Mat[j][0]));
+                    }
+                }
+            }
+            System.out.println();
+        }
+    }
+
     public Matriks TukerKolom(Matriks b) {
         Matriks M1 = this.Copy();
-        for (int i = 0; i < this.NBrsEff; i++) {
-            M1.Mat[i][0] = b.Mat[i][0];
+        int j = this.NKolEFF-1;
+        while (j >= 0) {
+            if ((j == 0) || (M1.AmbilKolom(j).IsEmpty())) {
+                for (int i = 0; i < this.NBrsEff; i++) {
+                    M1.Mat[i][j] = b.Mat[i][0];
+                }
+                return M1;
+            }
+            j--;
         }
         return M1;
     }
@@ -399,6 +448,14 @@ public class Matriks {
         Matriks Hasil = new Matriks(1, this.NKolEFF);
         for (int j = 0; j < this.NKolEFF; j++) {
             Hasil.Mat[0][j] = Mat[i][j];
+        }
+        return Hasil;
+    }
+
+    public Matriks AmbilKolom(int j) {
+        Matriks Hasil = new Matriks(this.NBrsEff, 1);
+        for (int i = 0; i < this.NBrsEff; i++) {
+            Hasil.Mat[i][0] = Mat[i][j];
         }
         return Hasil;
     }
@@ -435,9 +492,29 @@ public class Matriks {
         return true;
     }
 
+    public boolean IsEq(Matriks M) {
+        for (int i = 0; i < this.NBrsEff; i++) {
+            for (int j = 0; j < this.NKolEFF; j++) {
+                if (Mat[i][j] != M.Mat[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public boolean AdaBarisKosong() {
         for (int i = 0; i < this.NBrsEff; i++) {
             if (this.AmbilBaris(i).IsEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean AdaKolomKosong() {
+        for (int j = 0; j < this.NKolEFF; j++) {
+            if (this.AmbilKolom(j).IsEmpty()) {
                 return true;
             }
         }
@@ -502,13 +579,72 @@ public class Matriks {
         }
     }
 
+    public Matriks ExtSolusi(int NBrs, double fill) {
+        Matriks b1 = new Matriks(NBrs, 1);
+        for (int i = 0; i < NBrs; i++) {
+            if (i < this.NBrsEff) {
+                b1.Mat[i][0] = Mat[i][0];
+            } else {
+                b1.Mat[i][0] = fill;
+            }
+        }
+        return b1;
+    }
+
+    public Matriks VarMask(Matriks M) {
+        Matriks b = this.Copy();
+        int k = 1;
+        for (int i = 0; i < this.NBrsEff; i++) {
+            if (M.AmbilBaris(i).IsEmpty()) {
+                b.Mat[i][0] = k;
+                k++;
+            } else {
+                b.Mat[i][0] = 0.0;
+            }
+        }
+        return b;
+    }
+
+    public Matriks UnMask(Matriks bvar) {
+        Matriks b = this.Copy();
+        for (int i = 0; i < this.NBrsEff; i++) {
+            if (bvar.Mat[i][0] != 0) {
+                b.Mat[i][0] = 0;
+            }
+        }
+        return b;
+    }
+
+    public Matriks ConjMatriks(Matriks M) {
+        Matriks M1 = this.Copy();
+        for (int i = 0; i < this.NBrsEff; i++) {
+            for (int j = 0; j < this.NKolEFF; j++) {
+                if (Mat[i][j] != M.Mat[i][j]) {
+                    M1.Mat[i][j] = 0;
+                }
+            }
+        }
+        return M1;
+    }
+
     public void SPLInverse(Matriks b) {
         Matriks M1 = this.Square();
+        Matriks b1 = b.ExtSolusi(M1.NBrsEff, 0.0);
+        Matriks M2 = M1.TukerKolom(b1);
         if (M1.Determinan() != 0) {
             Matriks Mhasil = M1.Inverse().KaliMatriks(b);
             Mhasil.TulisSPLUnik();
+            System.out.println("unik");
         } else {
-            if (M1.TukerKolom(b).Determinan() != 0) {
+            boolean valid = true;
+            if (M1.AdaBarisKosong()) {
+                for (int i = 0; i < this.NBrsEff; i++) {
+                    if (M1.AmbilBaris(i).IsEmpty()) {
+                        valid = valid && (b1.Mat[i][0] == 0);
+                    }
+                }
+            }
+            if ((M2.Determinan() != 0) || !valid) {
                 System.out.println("SPL tidak memiliki solusi");
             } else {
                 int varBebas = 1;
@@ -517,6 +653,9 @@ public class Matriks {
                     Basis = Basis.JadiBasis();
                     varBebas++;
                 }
+                Matriks A = Basis.Inverse();
+                Matriks MTrue = Basis.ConjMatriks(M1);
+                A.TulisSPLParametrik(MTrue, b1);
                 System.out.println("Terdapat " + varBebas + " variabel bebas.");
             }
         }
