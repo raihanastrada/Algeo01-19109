@@ -31,6 +31,7 @@ public class Matriks {
 
     public void InputMatriksFile() {
         Scanner input = new Scanner(System.in);
+        System.out.print("Import dari file: ");
         String filename = input.nextLine();
         try {
             Scanner s = new Scanner (new File(filename));
@@ -100,16 +101,6 @@ public class Matriks {
                 for (int k = 0; k < this.NBrsEff; k++) {
                     M1.Mat[i][j] += Mat[i][k] * M2.Mat[k][j];
                 }
-            }
-        }
-        return M1;
-    }
-
-    public Matriks MinusMatriks(Matriks M2) { // I.S. dimensi this.Mat = dimensi M2.Mat
-        Matriks M1 = this.Copy();
-        for (int i = 0; i < this.NBrsEff; i++) {
-            for (int j = 0; j < this.NKolEFF; j++) {
-                M1.Mat[i][j] -= M2.Mat[i][j];
             }
         }
         return M1;
@@ -441,31 +432,38 @@ public class Matriks {
         Matriks A = this.Copy();
         Matriks bvar = b1.VarMask(M1);
         Matriks Mkonst = A.KaliMatriks(b1.UnMask(bvar));
+        String outputln = "";
         for (int i = 0; i < A.NBrsEff; i++) {
-            System.out.print("Solusi dari X" + (i + 1) + " adalah = ");
-            if ((Mkonst.Mat[i][0] > epsilon) || (Mkonst.Mat[i][0] < -epsilon)) {
-                System.out.print(Mkonst.Mat[i][0]);
+            outputln = "";
+            if ((Mkonst.Mat[i][0] > epsilon )|| (Mkonst.Mat[i][0] < -epsilon)) {
+                outputln += (Mkonst.Mat[i][0]);
             }
             for (int j = 0; j < A.NKolEFF; j++) {
                 if (bvar.Mat[j][0] != 0) {
-                    if (A.Mat[i][j] > 0) {
-                        if ((Mkonst.Mat[i][0] > epsilon) || (Mkonst.Mat[i][0] < -epsilon)) {
-                            System.out.print(" + ");
+                    if (A.Mat[i][j] > epsilon) {
+                        if ((Mkonst.Mat[i][0] > epsilon )|| (Mkonst.Mat[i][0] < -epsilon)) {
+                            outputln += " + ";
                         }
                         if (A.Mat[i][j] != 1) {
-                            System.out.print(A.Mat[i][j]);
+                            outputln += A.Mat[i][j];
                         }
-                        System.out.print("k" + ((int) bvar.Mat[j][0]));
-                    } else if (A.Mat[i][j] < 0) {
-                        System.out.print(" - ");
+                        outputln += "k" + ((int) bvar.Mat[j][0]);
+                    } else if (A.Mat[i][j] < -epsilon) {
+                        outputln += " - ";
                         if (A.Mat[i][j] != -1) {
-                            System.out.print(-1*A.Mat[i][j]);
+                            outputln += (-1*A.Mat[i][j]);
                         }
-                        System.out.print("k" + ((int) bvar.Mat[j][0]));
+                        outputln += "k" + ((int) bvar.Mat[j][0]);
                     }
                 }
             }
-            System.out.println();
+            if (outputln == "") {
+                outputln = "0.0";
+            }
+            if (!(M1.AmbilKolom(i).IsEmpty())) {
+                outputln = "Solusi dari X" + (i + 1) + " adalah = " + outputln;
+                System.out.println(outputln);
+            }
         }
     }
 
@@ -523,7 +521,7 @@ public class Matriks {
             Matriks M1 = new Matriks(N, N);
             for (int i = 0; i < N; i++) {
                 for (int j = 0; j < N; j++) {
-                    if ((j < this.NKolEFF) || (i < NBrsEff)) {
+                    if ((j < this.NKolEFF) && (i < this.NBrsEff)) {
                         M1.Mat[i][j] = this.Mat[i][j];
                     } else {
                         M1.Mat[i][j] = 0;
@@ -536,9 +534,10 @@ public class Matriks {
     }
 
     public boolean IsEmpty() {
+        double epsilon = 1e-10;
         for (int i = 0; i < this.NBrsEff; i++) {
             for (int j = 0; j < this.NKolEFF; j++) {
-                if (Mat[i][j] != 0) {
+                if ((Mat[i][j] > epsilon) || (Mat[i][j] < -epsilon)) {
                     return false;
                 }
             }
@@ -673,14 +672,14 @@ public class Matriks {
         } else {
             boolean valid = true;
             if (M1.AdaBarisKosong()) {
-                for (int i = 0; i < this.NBrsEff; i++) {
+                for (int i = 0; i < M1.NBrsEff; i++) {
                     if (M1.AmbilBaris(i).IsEmpty()) {
                         valid = valid && (b1.Mat[i][0] == 0);
                     }
                 }
             }
             boolean nonZero = false;
-            for (int j = 0; j < this.NKolEFF; j++) {
+            for (int j = 0; j < M1.NKolEFF; j++) {
                 if (M1.TukerKolom(b1, j).Determinan() != 0) {
                     nonZero = true;
                 }
