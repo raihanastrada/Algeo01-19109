@@ -2,6 +2,8 @@ package src;
 
 import java.util.*;
 
+import java.io.*;
+
 public class Matriks {
     // Atribut
     private int NBrsEff, NKolEFF;
@@ -19,13 +21,61 @@ public class Matriks {
 
     public void InputMatriks() {
         Scanner input = new Scanner(System.in);
-
         for (int i = 0; i < this.NBrsEff; i++) {
             for (int j = 0; j < this.NKolEFF; j++) {
                 System.out.print("Masukkan input matriks [" + i + "][" + j + "]: ");
                 Mat[i][j] = input.nextDouble();
             }
         }
+    }
+
+    public void InputMatriksFile(String filename) {
+        try {
+            Scanner s = new Scanner (new File(filename));
+            int NB = 0;
+            int NK = 0;
+            while(s.hasNextLine()) {
+                Scanner colReader = new Scanner(s.nextLine());
+                while(colReader.hasNextDouble()) {
+                    ++NK;
+                    colReader.nextDouble();
+                }
+                ++NB;
+            }
+            NK /= NB;
+            this.MakeMatriks(NB, NK);
+            try {
+                s = new Scanner(new File(filename));
+                for(int i = 0; i < this.NBrsEff; i++) {
+                    for(int j = 0; j < this.NKolEFF; j++) {
+                        if(s.hasNextDouble()) {
+                            Mat[i][j] = s.nextDouble();
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("File not found");
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            System.out.println("File not found");
+            e.printStackTrace();
+        }
+    }
+
+    public Matriks Deaugment() {
+        Matriks b = new Matriks(this.NBrsEff, 1);
+        for (int i = 0; i < this.NBrsEff; i++) {
+            b.Mat[i][0] = Mat[i][this.NKolEFF-1];
+        }
+        Matriks M1 = this.Copy();
+        this.MakeMatriks(this.NBrsEff, this.NKolEFF-1);
+        for (int i = 0; i < this.NBrsEff; i++) {
+            for (int j = 0; j < this.NKolEFF; j++) {
+                Mat[i][j] = M1.Mat[i][j];
+            }
+        }
+        return b;
     }
 
     public void TulisMatriks() {
