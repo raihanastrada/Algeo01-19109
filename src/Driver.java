@@ -1,7 +1,6 @@
 package src;
 import java.util.Scanner;
-
-
+import java.io.FileWriter;
 
 public class Driver {
     static void MenuAwal() {
@@ -28,6 +27,53 @@ public class Driver {
         System.out.println("Pilih Metode Input Data             ");
         System.out.println("1. Masukan dari keyboard            ");
         System.out.println("2. Masukan dari file                ");
+    }
+
+    static String[] JoinStrArr(String[] S1, String[] S2) {
+        int n = S1.length + S2.length;
+        String[] res = new String[n];
+        for (int i = 0; i < n; i++) {
+            if (i < S1.length) {
+                res[i] = S1[i];
+            } else {
+                res[i] = S2[i-S1.length];
+            }
+        }
+        return res;
+    }
+
+    static void Output(String[] output) {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Pilihan Metode Output Hasil         ");
+        System.out.println("1. Cetak di layar                   ");
+        System.out.println("2. Simpan ke file                   ");
+        System.out.println("Pilihan Metode:                     ");
+        int PilihanOut = input.nextInt();
+        while (PilihanOut > 2 || PilihanOut < 1) {
+            System.out.println("Input yang Anda masukkan tidak valid.");
+            PilihanOut = input.nextInt();
+        }
+        if (PilihanOut == 1) {
+            for (int i = 0; i < output.length; i++) {
+                System.out.println(output[i]);
+            }
+        } else {
+            System.out.print("Simpan ke file: ");
+            input = new Scanner(System.in);
+            String filename = input.nextLine();
+            try {
+                FileWriter writer = new FileWriter(filename);
+                for (int i = 0; i < output.length; i++) {
+                    if (output[i] != "") {
+                        writer.write(output[i] + "\n");
+                    }
+                }
+                writer.close();
+            } catch (Exception e) {
+                System.out.println("File tidak ada.");
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -69,28 +115,37 @@ public class Driver {
                     Matriks Mhasil = M1.Gauss1();
                     Matriks Mcek = M1.GaussJordan();
 
+                    String[] output = new String[1];
+
                     if(Mcek.IsUnik()){
-                        Mhasil.TulisMatriks();
-                        Mhasil.TulisSPLUnik();
+                        String[] part1 = Mhasil.TulisMatriks();
+                        String[] part2 = Mhasil.TulisSPLUnik();
+                        output = JoinStrArr(part1, part2);
                     }
                     else if (!(Mcek.IsUnik())) {
                         if(Mcek.AdaBarisKosong()){
-                            Mhasil.TulisMatriks();
-                            System.out.println("SOLUSI BANYAK");
-                            Mhasil.TulisSPL();
+                            String[] part1 = Mhasil.TulisMatriks();
+                            String[] part2 = new String[1];
+                            part2[0] = "SOLUSI BANYAK";
+                            String[] part3 = Mhasil.TulisSPL();
+                            output = JoinStrArr(JoinStrArr(part1, part2), part3);
                         }
                         else {
                             if (Mcek.NoSolution()){
-                                Mhasil.TulisMatriks();
-                                System.out.println("TIDAK ADA SOLUSI");
+                                String[] part1 = Mhasil.TulisMatriks();
+                                String[] part2 = new String[1];
+                                part2[0] = "TIDAK ADA SOLUSI";
+                                output = JoinStrArr(part1, part2);
                             }
                             else {
-                                Mhasil.TulisMatriks();
-                                Mhasil.TulisSPL();
+                                String[] part1 = Mhasil.TulisMatriks();
+                                String[] part2 = Mhasil.TulisSPL();
+                                output = JoinStrArr(part1, part2);
                             }
                         }
 
                     }
+                    Output(output);
                 }
                 else if (PilihanSub == 2) { //Metode GaussJordan
                     Matriks M1;
@@ -105,29 +160,37 @@ public class Driver {
                     }
                     Matriks Mhasil = M1.GaussJordan();
 
+                    String[] output = new String[1];
 
                     if(Mhasil.IsUnik()){
-                        Mhasil.TulisMatriks();
-                        Mhasil.TulisSPLUnik();
+                        String[] part1 = Mhasil.TulisMatriks();
+                        String[] part2 = Mhasil.TulisSPLUnik();
+                        output = JoinStrArr(part1, part2);
                     }
                     else if (!(Mhasil.IsUnik())) {
                         if(Mhasil.AdaBarisKosong()){
-                            Mhasil.TulisMatriks();
-                            System.out.println("SOLUSI BANYAK");
-                            Mhasil.TulisSPL();
+                            String[] part1 = Mhasil.TulisMatriks();
+                            String[] part2 = new String[1];
+                            part2[0] = "SOLUSI BANYAK";
+                            String[] part3 = Mhasil.TulisSPL();
+                            output = JoinStrArr(JoinStrArr(part1, part2), part3);
                         }
                         else {
                             if (Mhasil.NoSolution()){
-                                Mhasil.TulisMatriks();
-                                System.out.println("TIDAK ADA SOLUSI");
+                                String[] part1 = Mhasil.TulisMatriks();
+                                String[] part2 = new String[1];
+                                part2[0] = "TIDAK ADA SOLUSI";
+                                output = JoinStrArr(part1, part2);
                             }
                             else {
-                                Mhasil.TulisMatriks();
-                                Mhasil.TulisSPL();
+                                String[] part1 = Mhasil.TulisMatriks();
+                                String[] part2 = Mhasil.TulisSPL();
+                                output = JoinStrArr(part1, part2);
                             }
                         }
 
                     }
+                    Output(output);
                 }
                 else if (PilihanSub == 3) { // metode inverse; x = A^-1 * b
                     Matriks M1, b;
@@ -148,6 +211,7 @@ public class Driver {
                         b = M1.Deaugment();
                     }
                     M1.SPLInverse(b);
+                    Output(M1.SPLInverse(b));
                 }
                 else if (PilihanSub == 4) {
                     Matriks M1, M2;
@@ -166,7 +230,7 @@ public class Driver {
                         M1.InputMatriksFile();
                         M2 = M1.Deaugment();
                     }
-                    M1.Crammer(M2);
+                    Output(M1.Crammer(M2));
                 }                
             }
             else if (PilihanMenu == 2) {
@@ -180,55 +244,61 @@ public class Driver {
                     PilihanDet = input.nextInt();
                 }
                 if (PilihanDet == 1) {
+                    Matriks M1;
                     System.out.println("# Metode ekspansi kofaktor         #");
                     if (PilihanMet == 1) {
                         System.out.print("Masukkan jumlah N (baris & kolom) : ");
                         int N = input.nextInt();
-                        Matriks M1 = new Matriks(N,N);
+                        M1 = new Matriks(N,N);
                         M1.InputMatriks();
-                        System.out.print("Determinan dari permasalahan tersebut adalah : ");
-                        System.out.println(M1.Determinan());
                     }
                     else {
-                        Matriks M1 = new Matriks(0,0);
+                        M1 = new Matriks(0,0);
                         M1.InputMatriksFile();
-                        System.out.print("Determinan dari permasalahan tersebut adalah : ");
-                        System.out.println(M1.Determinan());
                     }
+                    String[] output = new String[1];
+                    output[0] = "Determinan dari permasalahan tersebut adalah : " + M1.Determinan();
+                    Output(output);
                 }
                 else {
                     System.out.println("# Metode reduksi baris             #");
+                    Matriks M1;
                     if (PilihanMet == 1) {
                         System.out.print("Masukkan jumlah N (baris & kolom) : ");
                         int N = input.nextInt();
-                        Matriks M1 = new Matriks(N,N);
+                        M1 = new Matriks(N,N);
                         M1.InputMatriks();
-                        System.out.print("Determinan dari permasalahan tersebut adalah : ");
-                        System.out.println(M1.Determinan2());
                     }
                     else {
-                        Matriks M1 = new Matriks(0,0);
+                        M1 = new Matriks(0,0);
                         M1.InputMatriksFile();
-                        System.out.print("Determinan dari permasalahan tersebut adalah : ");
-                        System.out.println(M1.Determinan2());
                     }
+                    String[] output = new String[1];
+                    output[0] = "Determinan dari permasalahan tersebut adalah : " + M1.Determinan2();
+                    Output(output);
                 }
             }
             else if (PilihanMenu == 3) { // Matriks
+                Matriks M1;
                 if (PilihanMet == 1) {
                     System.out.print("Masukkan jumlah N (baris & kolom) : ");
                     int N = input.nextInt();
-                    Matriks M1 = new Matriks(N,N);
+                    M1 = new Matriks(N,N);
                     M1.InputMatriks();
-                    System.out.println("Invers dari matriks tersebut adalah : ");
-                    System.out.println(M1.Determinan());
-                    M1.Inverse().TulisMatriks();
                 }
                 else {
-                    Matriks M1 = new Matriks(0,0);
+                    M1 = new Matriks(0,0);
                     M1.InputMatriksFile();
-                    System.out.println("Invers dari matriks tersebut adalah : ");
-                    M1.Inverse().TulisMatriks();
+                }
+                if (M1.Determinan() == 0) {
+                    String[] output = new String[1];
+                    output[0] = "Matriks dengan determinan 0 tidak memiliki invers";
+                    Output(output);
+                } else {
+                    String[] part1 = new String[1];
+                    part1[0] = "Invers dari matriks tersebut adalah : " + M1.Determinan();
+                    String[] part2 = M1.Inverse().TulisMatriks();
+                    Output(JoinStrArr(part1, part2));
                 }
             }
             else if (PilihanMenu == 4) {
@@ -241,13 +311,14 @@ public class Driver {
                     Px.Mat.GaussJordan();
                     System.out.print("Masukkan nilai X yang akan ditaksir: ");
                     double X = input.nextDouble();
+                    String[] output = new String[1];
                     if (Px.Mat.Determinan2() != 0) {
-                        System.out.print("Nilai taksiran dari X="+X+" adalah: ");
-                        System.out.println(Px.Fungsi(X));
+                        output[0] = "Nilai taksiran dari X="+X+" adalah: " + Px.Fungsi(X);
                     }
                     else {
-                        System.out.println("Nilai dari X="+X+" tidak dapat ditaksir");
+                        output[0] = "Nilai dari X="+X+" tidak dapat ditaksir";
                     }
+                    Output(output);
                 }
                 else {
                     Matriks M1 = new Matriks(0,0);
@@ -256,13 +327,14 @@ public class Driver {
                     Px.Mat.GaussJordan();
                     System.out.print("Masukkan nilai X yang akan ditaksir: ");
                     double X = input.nextDouble();
+                    String[] output = new String[1];
                     if (Px.Mat.Determinan2() != 0) {
-                        System.out.print("Nilai taksiran dari X="+X+" adalah: ");
-                        System.out.println(Px.Fungsi(X));
+                        output[0] = "Nilai taksiran dari X="+X+" adalah: " + Px.Fungsi(X);
                     }
                     else {
-                        System.out.println("Nilai dari X="+X+" tidak dapat ditaksir");
+                        output[0] = "Nilai dari X="+X+" tidak dapat ditaksir";
                     }
+                    Output(output);
                 }
             }
             else if (PilihanMenu == 5) {
@@ -291,13 +363,14 @@ public class Driver {
                     R.NormEq();
                     R.Augmented.GaussJordan();
                     R.InputTaksiran();
+                    String[] output = new String[1];
                     if (R.Augmented.Determinan2() != 0) {
-                        System.out.print("Nilai taksiran dari input adalah: ");
-                        System.out.println(R.Fungsi());
+                        output[0] = "Nilai taksiran dari input adalah: " + R.Fungsi();
                     }
                     else {
-                        System.out.println("Nilai dari input tidak dapat ditaksir");
+                        output[0] = "Nilai dari input tidak dapat ditaksir";
                     }
+                    Output(output);
                 }
                 else {
                     Matriks M1 = new Matriks(0,0);
@@ -324,13 +397,14 @@ public class Driver {
                     R.NormEq();
                     R.Augmented.GaussJordan();
                     R.InputTaksiran();
+                    String[] output = new String[1];
                     if (R.Augmented.Determinan2() != 0) {
-                        System.out.print("Nilai taksiran dari input adalah: ");
-                        System.out.println(R.Fungsi());
+                        output[0] = "Nilai taksiran dari input adalah: " + R.Fungsi();
                     }
                     else {
-                        System.out.println("Nilai dari input tidak dapat ditaksir");
+                        output[0] = "Nilai dari input tidak dapat ditaksir";
                     }
+                    Output(output);
                 }
             }
             else if (PilihanMenu == 6) {
