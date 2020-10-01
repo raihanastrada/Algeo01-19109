@@ -1,5 +1,7 @@
 package src;
-import java.util.*;
+import java.util.Scanner;
+
+
 
 public class Driver {
     static void MenuAwal() {
@@ -65,16 +67,32 @@ public class Driver {
                         M1.InputMatriksFile();
                     }
                     Matriks Mhasil = M1.Gauss1();
-                    double Dethasil= Mhasil.Determinan();
+                    Matriks Mcek = M1.GaussJordan();
 
-                    if (Dethasil != 0.0) {
+                    if(Mcek.IsUnik()){
                         Mhasil.TulisMatriks();
+                        Mhasil.TulisSPLUnik();
                     }
-                    else {
-                        Mhasil.TulisMatriks();
+                    else if (!(Mcek.IsUnik())) {
+                        if(Mcek.AdaBarisKosong()){
+                            Mhasil.TulisMatriks();
+                            System.out.println("SOLUSI BANYAK");
+                            Mhasil.TulisSPL();
+                        }
+                        else {
+                            if (Mcek.NoSolution()){
+                                Mhasil.TulisMatriks();
+                                System.out.println("TIDAK ADA SOLUSI");
+                            }
+                            else {
+                                Mhasil.TulisMatriks();
+                                Mhasil.TulisSPL();
+                            }
+                        }
+
                     }
                 }
-                else if (PilihanSub == 2) { //Metode Gauss
+                else if (PilihanSub == 2) { //Metode GaussJordan
                     Matriks M1;
                     if (PilihanMet == 1) {
                         int NB,NK;
@@ -83,16 +101,32 @@ public class Driver {
                         M1 = new Matriks(NB,NK); M1.InputMatriks();
                     } else {
                         M1 = new Matriks(0,0);
-                        M1.InputMatriksFile();   
+                        M1.InputMatriksFile();
                     }
-                    Matriks Mhasil = M1.Gauss1();
-                    double Dethasil= Mhasil.Determinan();
+                    Matriks Mhasil = M1.GaussJordan();
 
-                    if (Dethasil != 0.0) {
+
+                    if(Mhasil.IsUnik()){
                         Mhasil.TulisMatriks();
+                        Mhasil.TulisSPLUnik();
                     }
-                    else {
-                        Mhasil.TulisMatriks();
+                    else if (!(Mhasil.IsUnik())) {
+                        if(Mhasil.AdaBarisKosong()){
+                            Mhasil.TulisMatriks();
+                            System.out.println("SOLUSI BANYAK");
+                            Mhasil.TulisSPL();
+                        }
+                        else {
+                            if (Mhasil.NoSolution()){
+                                Mhasil.TulisMatriks();
+                                System.out.println("TIDAK ADA SOLUSI");
+                            }
+                            else {
+                                Mhasil.TulisMatriks();
+                                Mhasil.TulisSPL();
+                            }
+                        }
+
                     }
                 }
                 else if (PilihanSub == 3) { // metode inverse; x = A^-1 * b
