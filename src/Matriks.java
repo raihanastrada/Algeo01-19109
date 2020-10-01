@@ -6,7 +6,7 @@ import java.io.*;
 
 public class Matriks {
     // Atribut
-    private int NBrsEff, NKolEFF;
+    public int NBrsEff, NKolEFF;
     double[][] Mat = new double[100][100];
 
     public Matriks(int NB, int NK) {
@@ -330,7 +330,7 @@ public class Matriks {
             }
         }
         /* Swapping row with all 0's as the elements */
-        int i,j,k; boolean zero;
+        int i,j,k;
         k = 1;
         for (i = 0; i < this.NBrsEff; i++){
             for (j = 0; j < this.NKolEFF; j++){
@@ -399,7 +399,7 @@ public class Matriks {
             }
         }
         /* Swapping row with all 0's element */
-        int i,j,k; boolean zero;
+        int i,j,k;
         k = 1;
         for (i = 0; i < this.NBrsEff; i++){
             for (j = 0; j < this.NKolEFF; j++){

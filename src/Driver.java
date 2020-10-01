@@ -1,7 +1,5 @@
-//package src;
+package src;
 import java.util.*;
-
-import src.Matriks;
 
 public class Driver {
     static void MenuAwal() {
@@ -202,19 +200,105 @@ public class Driver {
             else if (PilihanMenu == 4) {
                 System.out.println("Interpolasi Polinom");
                 if (PilihanMet == 1) {
-                    
+                    System.out.print("Masukkan jumlah N: ");
+                    int N = input.nextInt();
+                    Interpolasi Px = new Interpolasi(N);
+                    Px.InputPolinom();
+                    Px.Mat.GaussJordan();
+                    System.out.print("Masukkan nilai X yang akan ditaksir: ");
+                    double X = input.nextDouble();
+                    if (Px.Mat.Determinan2() != 0) {
+                        System.out.print("Nilai taksiran dari X="+X+" adalah: ");
+                        System.out.println(Px.Fungsi(X));
+                    }
+                    else {
+                        System.out.println("Nilai dari X="+X+" tidak dapat ditaksir");
+                    }
                 }
                 else {
-                    
+                    Matriks M1 = new Matriks(0,0);
+                    M1.InputMatriksFile();
+                    Interpolasi Px = new Interpolasi(M1);
+                    Px.Mat.GaussJordan();
+                    System.out.print("Masukkan nilai X yang akan ditaksir: ");
+                    double X = input.nextDouble();
+                    if (Px.Mat.Determinan2() != 0) {
+                        System.out.print("Nilai taksiran dari X="+X+" adalah: ");
+                        System.out.println(Px.Fungsi(X));
+                    }
+                    else {
+                        System.out.println("Nilai dari X="+X+" tidak dapat ditaksir");
+                    }
                 }
             }
             else if (PilihanMenu == 5) {
                 System.out.println("Regresi linier berganda");
                 if (PilihanMet == 1) {
-                    
+                    System.out.print("Masukkan jumlah baris : "); int NB = input.nextInt();
+                    System.out.print("Masukkan jumlah kolom : "); int NK = input.nextInt();
+                    Matriks M1 = new Matriks(NB,NK); M1.InputMatriks();
+                    Matriks X = new Matriks(NB,NK);
+                    Matriks Y = new Matriks(NB,1);
+                    for (int i=0; i<NB; i++) {
+                        for (int j=0; j<NK; j++) {
+                            if (j==0) {
+                                X.Mat[i][j] = 1;    
+                            }
+                            else if (j==NK-1) {
+                                Y.Mat[i][0] = M1.Mat[i][j];
+                                X.Mat[i][j] = M1.Mat[i][j-1];
+                            }
+                            else {
+                                X.Mat[i][j] = M1.Mat[i][j-1];
+                            }
+                        }
+                    }
+                    Regresi R = new Regresi(X,Y);
+                    R.NormEq();
+                    R.Augmented.GaussJordan();
+                    System.out.print("Masukkan nilai X yang akan ditaksir: ");
+                    double x = input.nextDouble();
+                    if (R.Augmented.Determinan2() != 0) {
+                        System.out.print("Nilai taksiran dari X="+x+" adalah: ");
+                        System.out.println(R.Fungsi(x));
+                    }
+                    else {
+                        System.out.println("Nilai dari X="+x+" tidak dapat ditaksir");
+                    }
                 }
                 else {
-                    
+                    Matriks M1 = new Matriks(0,0);
+                    M1.InputMatriksFile();
+                    int NB = M1.NBrsEff;
+                    int NK = M1.NKolEFF;
+                    Matriks X = new Matriks(NB,NK);
+                    Matriks Y = new Matriks(NB,1);
+                    for (int i=0; i<NB; i++) {
+                        for (int j=0; j<NK; j++) {
+                            if (j==0) {
+                                X.Mat[i][j] = 1;    
+                            }
+                            else if (j==NK-1) {
+                                Y.Mat[i][0] = M1.Mat[i][j];
+                                X.Mat[i][j] = M1.Mat[i][j-1];
+                            }
+                            else {
+                                X.Mat[i][j] = M1.Mat[i][j-1];
+                            }
+                        }
+                    }
+                    Regresi R = new Regresi(X,Y);
+                    R.NormEq();
+                    R.Augmented.GaussJordan();
+                    System.out.print("Masukkan nilai X yang akan ditaksir: ");
+                    double x = input.nextDouble();
+                    if (R.Augmented.Determinan2() != 0) {
+                        System.out.print("Nilai taksiran dari X="+x+" adalah: ");
+                        System.out.println(R.Fungsi(x));
+                    }
+                    else {
+                        System.out.println("Nilai dari X="+x+" tidak dapat ditaksir");
+                    }
                 }
             }
             else if (PilihanMenu == 6) {
