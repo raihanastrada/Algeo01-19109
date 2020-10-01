@@ -91,6 +91,7 @@ public class Matriks {
                 }
             }
         }
+        System.out.println("");
     }
 
     public Matriks KaliMatriks(Matriks M2) {
@@ -316,10 +317,10 @@ public class Matriks {
                 else {
                     factor = 0;
                 }
-                if ( i != scan) {
-                    for (int j = scan; j < this.NKolEFF; j++) {
-                        Mat[i][j] -= factor * Mat[scan][j];
-                    }
+
+                for (int j = scan; j < this.NKolEFF; j++) {
+                    Mat[i][j] -= factor * Mat[scan][j];
+
                 }
             }
         }
@@ -433,7 +434,7 @@ public class Matriks {
     public void TulisSPLUnik() {
         for (int i = 0; i < this.NBrsEff; i++) {
             System.out.print("Solusi dari X" + (i + 1) + " adalah = ");
-            System.out.println(Mat[i][0]);
+            System.out.println(Mat[i][NKolEFF-1]);
         }
     }
 

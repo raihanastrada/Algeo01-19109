@@ -1,5 +1,7 @@
 package src;
-import java.util.*;
+import java.util.Scanner;
+
+
 
 public class Driver {
     static void MenuAwal() {
@@ -83,7 +85,7 @@ public class Driver {
                                 System.out.println("TIDAK ADA SOLUSI");
                             }
                             else {
-                                Mhasil.TulisSPL();
+                                Mhasil.TulisMatriks();
                                 Mhasil.TulisSPL();
                             }
                         }
@@ -120,7 +122,7 @@ public class Driver {
                                 System.out.println("TIDAK ADA SOLUSI");
                             }
                             else {
-                                Mhasil.TulisSPL();
+                                Mhasil.TulisMatriks();
                                 Mhasil.TulisSPL();
                             }
                         }
