@@ -256,14 +256,13 @@ public class Driver {
                     Regresi R = new Regresi(X,Y);
                     R.NormEq();
                     R.Augmented.GaussJordan();
-                    System.out.print("Masukkan nilai X yang akan ditaksir: ");
-                    double x = input.nextDouble();
+                    R.InputTaksiran();
                     if (R.Augmented.Determinan2() != 0) {
-                        System.out.print("Nilai taksiran dari X="+x+" adalah: ");
-                        System.out.println(R.Fungsi(x));
+                        System.out.print("Nilai taksiran dari input adalah: ");
+                        System.out.println(R.Fungsi());
                     }
                     else {
-                        System.out.println("Nilai dari X="+x+" tidak dapat ditaksir");
+                        System.out.println("Nilai dari input tidak dapat ditaksir");
                     }
                 }
                 else {
@@ -290,14 +289,13 @@ public class Driver {
                     Regresi R = new Regresi(X,Y);
                     R.NormEq();
                     R.Augmented.GaussJordan();
-                    System.out.print("Masukkan nilai X yang akan ditaksir: ");
-                    double x = input.nextDouble();
+                    R.InputTaksiran();
                     if (R.Augmented.Determinan2() != 0) {
-                        System.out.print("Nilai taksiran dari X="+x+" adalah: ");
-                        System.out.println(R.Fungsi(x));
+                        System.out.print("Nilai taksiran dari input adalah: ");
+                        System.out.println(R.Fungsi());
                     }
                     else {
-                        System.out.println("Nilai dari X="+x+" tidak dapat ditaksir");
+                        System.out.println("Nilai dari input tidak dapat ditaksir");
                     }
                 }
             }
