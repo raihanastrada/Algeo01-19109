@@ -308,10 +308,18 @@ public class Matriks {
             Mat[maxrow] = temp;
 
             /* Simplifying row using factor */
-            for (int i = scan + 1; i < N; i++) {
-                double factor = Mat[i][scan] / Mat[scan][scan];
-                for (int j = scan; j < this.NKolEFF; j++) {
-                    Mat[i][j] -= factor * Mat[scan][j];
+            for (int i = scan+1 ; i < N; i++) {
+                double factor;
+                if (Mat[scan][scan] != 0) {
+                    factor = Mat[i][scan] / Mat[scan][scan];
+                }
+                else {
+                    factor = 0;
+                }
+                if ( i != scan) {
+                    for (int j = scan; j < this.NKolEFF; j++) {
+                        Mat[i][j] -= factor * Mat[scan][j];
+                    }
                 }
             }
         }
@@ -329,16 +337,17 @@ public class Matriks {
                 }
             }
         }
-        /* Swapping row with all 0's as the elements */
-        int i,j,k;
+        /* Swapping row with all 0's element */
+        int i,j,k; boolean zero;
         k = 1;
-        for (i = 0; i < this.NBrsEff; i++){
+        for (i = 0; i <= this.NBrsEff-k; i++){
             for (j = 0; j < this.NKolEFF; j++){
                 if(Mat[i][j] != 0) break;
                 if(j == this.NKolEFF - 1) {
                     double [] temp = Mat[i];
                     Mat[i] = Mat[this.NBrsEff - k];
                     Mat[this.NBrsEff - k] = temp;
+                    k++;
                 }
             }
         }
@@ -399,15 +408,16 @@ public class Matriks {
             }
         }
         /* Swapping row with all 0's element */
-        int i,j,k;
+        int i,j,k; boolean zero;
         k = 1;
-        for (i = 0; i < this.NBrsEff; i++){
+        for (i = 0; i <= this.NBrsEff-k; i++){
             for (j = 0; j < this.NKolEFF; j++){
                 if(Mat[i][j] != 0) break;
                 if(j == this.NKolEFF - 1) {
                     double [] temp = Mat[i];
                     Mat[i] = Mat[this.NBrsEff - k];
                     Mat[this.NBrsEff - k] = temp;
+                    k++;
                 }
             }
         }
@@ -698,6 +708,55 @@ public class Matriks {
                 A.TulisSPLParametrik(MTrue, b1);
                 System.out.println("Dengan " + varBebas + " variabel bebas.");
             }
+        }
+    }
+    public boolean IsUnik(){
+        Matriks Munik = new Matriks(this.NBrsEff, this.NBrsEff);
+        for (int i = 0; i < this.NKolEFF-1; i++) {
+            for (int j = 0 ; j < this.NKolEFF-1; j++) {
+                Munik.Mat[i][j] = Mat[i][j];
+            }
+        }
+        if (Munik.Determinan() == 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    public boolean NoSolution() {
+        for (int j = 0; j < NKolEFF-1; j++){
+            if (Mat[NBrsEff-1][NKolEFF-1] != 0){
+                if(Mat[NBrsEff-1][j] != 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public void TulisSPL() {
+        for (int i = 0; i < this.NBrsEff; i++) {
+            for (int j = 0; j < NKolEFF; j++){
+                if (j != NKolEFF -1) {
+                    if(Mat[i][j] != 0.0){
+                        if (Mat[i][j] < 0) {
+                            System.out.print(" "+Mat[i][j]+"X"+(j+1));
+                        }
+                        else{
+                            if(j == 0) {
+                                System.out.print(Mat[i][j] + "X" + (j + 1));
+                            }
+                            else {
+                                System.out.print(" +" + Mat[i][j] + "X" + (j + 1));
+                            }
+                        }
+                    }
+                }
+                else {
+                    System.out.println(" = "+Mat[i][j]);
+                }
+            }
+            System.out.println("");
         }
     }
 }
