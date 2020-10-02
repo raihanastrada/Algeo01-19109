@@ -1,6 +1,7 @@
 package src;
 
 import java.util.*;
+import src.Matriks;
 
 public class Interpolasi {
     // Atribut
@@ -16,12 +17,7 @@ public class Interpolasi {
         this.NBrs = M.NBrsEff;
         this.NKol = M.NKolEFF;
     }
-    public Interpolasi(Interpolasi P) {
-        this.Mat = P.Mat;
-        this.NBrs = P.Mat.NBrsEff;
-        this.NKol = P.Mat.NKolEFF;
-    }
-
+    
     public void MakePolinom(int N) {
         this.NBrs = N+1;
         this.NKol = N+2;
@@ -53,6 +49,31 @@ public class Interpolasi {
                 }
             }
         }
+    }
+
+    public void toPolinom() {
+        this.NKol = this.NBrs+1;
+        Matriks M1 = new Matriks(this.NBrs,this.NKol);
+        double temp = 0;
+        for (int i = 0; i < this.NBrs; i++) {
+            for (int j = 0; j < this.NKol; j++) {
+                if (j == 0) {
+                    M1.Mat[i][j] = 1.0;
+                    temp = this.Mat.Mat[i][j];
+                }
+                else if (j==this.NKol-1) {
+                    M1.Mat[i][j] = this.Mat.Mat[i][1];
+                }
+                else {
+                    double HslExp = 1.0;
+                    for (int exp=1; exp <= j;exp++) {
+                        HslExp *= temp;
+                    }
+                    M1.Mat[i][j] = HslExp;
+                }
+            }
+        }
+        this.Mat = M1;
     }
 
     public double Fungsi(double X) {
