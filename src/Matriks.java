@@ -66,6 +66,20 @@ public class Matriks {
         }
     }
 
+    public Matriks Augment(Matriks b) {
+        Matriks M1 = new Matriks(this.NBrsEff, this.NKolEFF+1);
+        for (int i = 0; i < M1.NBrsEff; i++) {
+            for (int j = 0; j < M1.NKolEFF; j++) {
+                if (j < this.NKolEFF) {
+                    M1.Mat[i][j] = this.Mat[i][j];
+                } else {
+                    M1.Mat[i][j] = b.Mat[i][0];
+                }
+            }
+        }
+        return M1;
+    }
+
     public Matriks Deaugment() {
         Matriks b = new Matriks(this.NBrsEff, 1);
         for (int i = 0; i < this.NBrsEff; i++) {
@@ -624,6 +638,20 @@ public class Matriks {
             i--;
         }
         return M1;
+    }
+
+    public Matriks Identitas() {
+        Matriks Iden = new Matriks(this.NBrsEff, this.NKolEFF);
+        for (int i = 0; i < this.NBrsEff; i++) {
+            for (int j = 0; j < this.NKolEFF; j++) {
+                if (i == j) {
+                    Iden.Mat[i][j] = 1;
+                } else {
+                    Iden.Mat[i][j] = 0;
+                }
+            }
+        }
+        return Iden;
     }
 
     public Matriks ExtSolusi(int NBrs) { // agar dimensi matriks hasil dan matriks persamaan bisa dikalikan
