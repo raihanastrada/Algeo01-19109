@@ -336,8 +336,10 @@ public class Driver2 {
                     M1.InputMatriksFile();
                     Px = new Interpolasi(M1);
                     Px.toPolinom();
+                } if (PilihanSub == 1) {
+                    System.out.println("Interpolasi polinom belum terdefinisi untuk metode Gauss");
                 }
-                if (PilihanSub == 1 || PilihanSub == 2) {
+                else if (PilihanSub == 2) {
                     Px.Mat.GaussJordan();
                     System.out.print("Masukkan nilai X yang akan ditaksir: ");
                     double X = input.nextDouble();
@@ -425,7 +427,9 @@ public class Driver2 {
                 Regresi R = new Regresi(X,Y);
                 R.NormEq();
                 R.InputTaksiran();
-                if (PilihanSub == 1 || PilihanSub == 2) {
+                if (PilihanSub == 1) {
+                    System.out.println("Regresi linier berganda belum terdefinisi untuk metode Gauss");
+                } else if (PilihanSub == 2) {
                     R.Augmented.GaussJordan();
                     String[] output = new String[1];
                     if (R.Augmented.Determinan2() != 0) {
