@@ -230,7 +230,21 @@ public class Driver {
                         M1.InputMatriksFile();
                         M2 = M1.Deaugment();
                     }
-                    Output(M1.Crammer(M2));
+                    String[] output = new String[1];
+                    if (M1.Determinan() == 0) {
+                        boolean noSolusi = false;
+                        for (int j = 0; j < M1.NKolEFF; j++) {
+                            noSolusi = noSolusi || (M1.TukerKolom(M2, j).Determinan() != 0);
+                        }
+                        if (noSolusi) {
+                            output[0] = "SPL tidak memiliki solusi";
+                        } else {
+                            output[0] = "SPL memiliki banyak solusi";
+                        }
+                    } else {
+                        output = M1.Crammer(M2);
+                    }
+                    Output(output);
                 }                
             }
             else if (PilihanMenu == 2) {
@@ -303,28 +317,29 @@ public class Driver {
             }
             else if (PilihanMenu == 4) {
                 System.out.println("Interpolasi Polinom");
+                SubMenu();
+                System.out.print("Masukkan pilihan: ");
+                int PilihanSub = input.nextInt();
+                while (PilihanSub > 4 || PilihanMenu < 1) {
+                    System.out.println("Input yang anda masukkan tidak valid");
+                    PilihanSub = input.nextInt();
+                }
+                Interpolasi Px;
                 if (PilihanMet == 1) {
                     System.out.print("Masukkan jumlah N: ");
                     int N = input.nextInt();
-                    Interpolasi Px = new Interpolasi(N);
+                    Px = new Interpolasi(N);
                     Px.InputPolinom();
-                    Px.Mat.GaussJordan();
-                    System.out.print("Masukkan nilai X yang akan ditaksir: ");
-                    double X = input.nextDouble();
-                    String[] output = new String[1];
-                    if (Px.Mat.Determinan2() != 0) {
-                        output[0] = "Nilai taksiran dari X="+X+" adalah: " + Px.Fungsi(X);
-                    }
-                    else {
-                        output[0] = "Nilai dari X="+X+" tidak dapat ditaksir";
-                    }
-                    Output(output);
                 }
                 else {
                     Matriks M1 = new Matriks(0,0);
                     M1.InputMatriksFile();
-                    Interpolasi Px = new Interpolasi(M1);
+                    Px = new Interpolasi(M1);
                     Px.toPolinom();
+                } if (PilihanSub == 1) {
+                    System.out.println("Interpolasi polinom belum terdefinisi untuk metode Gauss");
+                }
+                else if (PilihanSub == 2) {
                     Px.Mat.GaussJordan();
                     System.out.print("Masukkan nilai X yang akan ditaksir: ");
                     double X = input.nextDouble();
@@ -336,34 +351,86 @@ public class Driver {
                         output[0] = "Nilai dari X="+X+" tidak dapat ditaksir";
                     }
                     Output(output);
+                } else if (PilihanSub == 3) {
+                    Matriks b = Px.Mat.Deaugment();
+                    Matriks M1 = Px.Mat.Copy();
+                    System.out.print("Masukkan nilai X yang akan ditaksir: ");
+                    double X = input.nextDouble();
+                    String[] output = new String[1];
+                    if (M1.Determinan() != 0) {
+                        Px.Mat = (M1.Identitas()).Augment((M1.Inverse()).KaliMatriks(b));
+                        output[0] = "Nilai taksiran dari X="+X+" adalah: " + Px.Fungsi(X);
+                    } else {
+                        output[0] = "Nilai dari X="+X+" tidak dapat ditaksir";
+                    }
+                    Output(output);
+                } else {
+                    Matriks b = Px.Mat.Deaugment();
+                    Matriks M1 = Px.Mat.Copy();
+                    System.out.print("Masukkan nilai X yang akan ditaksir: ");
+                    double X = input.nextDouble();
+                    String[] output = new String[1];
+                    if (M1.Determinan() != 0) {
+                        Matriks Mtemp;
+                        Matriks Arrhsl = new Matriks(M1.NBrsEff, 1);
+                        double D = M1.Determinan();
+                        for (int j = 0; j < M1.NKolEFF; j++) {
+                            Mtemp = M1.TukerKolom(b, j);
+                            Arrhsl.Mat[j][0] = Mtemp.Determinan()/D;
+                        }
+                        Px.Mat = (M1.Identitas()).Augment(Arrhsl);
+                        output[0] = "Nilai taksiran dari X="+X+" adalah: " + Px.Fungsi(X);
+                    } else {
+                        output[0] = "Nilai dari X="+X+" tidak dapat ditaksir";
+                    }
+                    Output(output);
                 }
+                
             }
             else if (PilihanMenu == 5) {
                 System.out.println("Regresi linier berganda");
+                SubMenu();
+                System.out.print("Masukkan pilihan: ");
+                int PilihanSub = input.nextInt();
+                while (PilihanSub > 4 || PilihanMenu < 1) {
+                    System.out.println("Input yang anda masukkan tidak valid");
+                    PilihanSub = input.nextInt();
+                }
+                Matriks M1;
+                int NB, NK;
                 if (PilihanMet == 1) {
-                    System.out.print("Masukkan jumlah baris : "); int NB = input.nextInt();
-                    System.out.print("Masukkan jumlah kolom : "); int NK = input.nextInt();
-                    Matriks M1 = new Matriks(NB,NK); M1.InputMatriks();
-                    Matriks X = new Matriks(NB,NK);
-                    Matriks Y = new Matriks(NB,1);
-                    for (int i=0; i<NB; i++) {
-                        for (int j=0; j<NK; j++) {
-                            if (j==0) {
-                                X.Mat[i][j] = 1;    
-                            }
-                            else if (j==NK-1) {
-                                Y.Mat[i][0] = M1.Mat[i][j];
-                                X.Mat[i][j] = M1.Mat[i][j-1];
-                            }
-                            else {
-                                X.Mat[i][j] = M1.Mat[i][j-1];
-                            }
+                    System.out.print("Masukkan jumlah baris : "); NB = input.nextInt();
+                    System.out.print("Masukkan jumlah kolom : "); NK = input.nextInt();
+                    M1 = new Matriks(NB,NK); M1.InputMatriks();
+                } else {
+                    M1 = new Matriks(0,0);
+                    M1.InputMatriksFile();
+                    NB = M1.NBrsEff;
+                    NK = M1.NKolEFF;
+                }
+                Matriks X = new Matriks(NB,NK);
+                Matriks Y = new Matriks(NB,1);
+                for (int i=0; i<NB; i++) {
+                    for (int j=0; j<NK; j++) {
+                        if (j==0) {
+                            X.Mat[i][j] = 1;    
+                        }
+                        else if (j==NK-1) {
+                            Y.Mat[i][0] = M1.Mat[i][j];
+                            X.Mat[i][j] = M1.Mat[i][j-1];
+                        }
+                        else {
+                            X.Mat[i][j] = M1.Mat[i][j-1];
                         }
                     }
-                    Regresi R = new Regresi(X,Y);
-                    R.NormEq();
+                }
+                Regresi R = new Regresi(X,Y);
+                R.NormEq();
+                R.InputTaksiran();
+                if (PilihanSub == 1) {
+                    System.out.println("Regresi linier berganda belum terdefinisi untuk metode Gauss");
+                } else if (PilihanSub == 2) {
                     R.Augmented.GaussJordan();
-                    R.InputTaksiran();
                     String[] output = new String[1];
                     if (R.Augmented.Determinan2() != 0) {
                         output[0] = "Nilai taksiran dari input adalah: " + R.Fungsi();
@@ -372,37 +439,32 @@ public class Driver {
                         output[0] = "Nilai dari input tidak dapat ditaksir";
                     }
                     Output(output);
-                }
-                else {
-                    Matriks M1 = new Matriks(0,0);
-                    M1.InputMatriksFile();
-                    int NB = M1.NBrsEff;
-                    int NK = M1.NKolEFF;
-                    Matriks X = new Matriks(NB,NK);
-                    Matriks Y = new Matriks(NB,1);
-                    for (int i=0; i<NB; i++) {
-                        for (int j=0; j<NK; j++) {
-                            if (j==0) {
-                                X.Mat[i][j] = 1;    
-                            }
-                            else if (j==NK-1) {
-                                Y.Mat[i][0] = M1.Mat[i][j];
-                                X.Mat[i][j] = M1.Mat[i][j-1];
-                            }
-                            else {
-                                X.Mat[i][j] = M1.Mat[i][j-1];
-                            }
-                        }
-                    }
-                    Regresi R = new Regresi(X,Y);
-                    R.NormEq();
-                    R.Augmented.GaussJordan();
-                    R.InputTaksiran();
+                } else if (PilihanSub == 3) {
+                    Matriks b = R.Augmented.Deaugment();
+                    Matriks M2 = R.Augmented.Copy();
                     String[] output = new String[1];
-                    if (R.Augmented.Determinan2() != 0) {
+                    if (M2.Determinan() != 0) {
+                        R.Augmented = (M2.Identitas()).Augment((M2.Inverse()).KaliMatriks(b));
                         output[0] = "Nilai taksiran dari input adalah: " + R.Fungsi();
+                    } else {
+                        output[0] = "Nilai dari input tidak dapat ditaksir";
                     }
-                    else {
+                    Output(output);
+                } else {
+                    Matriks b = R.Augmented.Deaugment();
+                    Matriks M2 = R.Augmented.Copy();
+                    String[] output = new String[1];
+                    if (M2.Determinan() != 0) {
+                        Matriks Mtemp;
+                        Matriks Arrhsl = new Matriks(M2.NBrsEff, 1);
+                        double D = M2.Determinan();
+                        for (int j = 0; j < M2.NKolEFF; j++) {
+                            Mtemp = M2.TukerKolom(b, j);
+                            Arrhsl.Mat[j][0] = Mtemp.Determinan()/D;
+                        }
+                        R.Augmented = (M2.Identitas()).Augment(Arrhsl);
+                        output[0] = "Nilai taksiran dari input adalah: " + R.Fungsi();
+                    } else {
                         output[0] = "Nilai dari input tidak dapat ditaksir";
                     }
                     Output(output);
