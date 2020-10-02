@@ -232,7 +232,15 @@ public class Driver2 {
                     }
                     String[] output = new String[1];
                     if (M1.Determinan() == 0) {
-                        output[0] = "SPL tidak memiliki solusi";
+                        boolean noSolusi = false;
+                        for (int j = 0; j < M1.NKolEFF; j++) {
+                            noSolusi = noSolusi || (M1.TukerKolom(M2, j).Determinan() != 0);
+                        }
+                        if (noSolusi) {
+                            output[0] = "SPL tidak memiliki solusi";
+                        } else {
+                            output[0] = "SPL memiliki banyak solusi";
+                        }
                     } else {
                         output = M1.Crammer(M2);
                     }
