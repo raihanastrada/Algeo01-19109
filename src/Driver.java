@@ -324,6 +324,7 @@ public class Driver {
                     Matriks M1 = new Matriks(0,0);
                     M1.InputMatriksFile();
                     Interpolasi Px = new Interpolasi(M1);
+                    Px.toPolinom();
                     Px.Mat.GaussJordan();
                     System.out.print("Masukkan nilai X yang akan ditaksir: ");
                     double X = input.nextDouble();
