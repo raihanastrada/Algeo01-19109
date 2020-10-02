@@ -230,7 +230,13 @@ public class Driver2 {
                         M1.InputMatriksFile();
                         M2 = M1.Deaugment();
                     }
-                    Output(M1.Crammer(M2));
+                    String[] output = new String[1];
+                    if (M1.Determinan() == 0) {
+                        output[0] = "SPL tidak memiliki solusi";
+                    } else {
+                        output = M1.Crammer(M2);
+                    }
+                    Output(output);
                 }                
             }
             else if (PilihanMenu == 2) {
